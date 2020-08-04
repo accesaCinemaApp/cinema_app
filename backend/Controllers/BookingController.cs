@@ -12,9 +12,9 @@ namespace CinemaApp.Controllers
     [ApiController]
     public class BookingController : ControllerBase
     {
-        private readonly CinemaContext _context;
+        private readonly CinemaDbContext _context;
 
-        public BookingController(CinemaContext context)
+        public BookingController(CinemaDbContext context)
         {
             _context = context;
         }
@@ -54,6 +54,13 @@ namespace CinemaApp.Controllers
                 return NotFound();
             }
             _context.Entry(booking).State = EntityState.Modified;
+            //check for Seats, if null it means that they will not be changed
+            if (booking.Seats.Equals(null))
+                _context.Entry(booking).Property("Seats").IsModified = false;
+            //same thing for TimeSlot
+            if (booking.TimeSlot.Equals(null))
+                _context.Entry(booking).Property("TimeSlot").IsModified = false;
+            //email should not be changed, as that means that the whole email confirmation is compromised
             await _context.SaveChangesAsync();
 
             return NoContent();

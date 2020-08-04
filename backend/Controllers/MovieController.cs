@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CinemaApp.Models;
+using CinemaApp.DTO;
 
 namespace CinemaApp.Controllers
 {
@@ -13,39 +14,39 @@ namespace CinemaApp.Controllers
     [ApiController]
     public class MovieController : ControllerBase
     {
-        private readonly MovieContext _context;
+        private readonly CinemaDbContext _context;
 
-        public MovieController(MovieContext context)
+        public MovieController(CinemaDbContext context)
         {
             _context = context;
         }
 
         // GET: api/Movie
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Movie>>> Getmovies()
+        public async Task<ActionResult<IEnumerable<MovieDTO>>> GetMovies()
         {
-            return await _context.movies.ToListAsync();
+            return await _context.Movies.Select(movie=> ItemToDTO(movie)).ToListAsync();
         }
 
         // GET: api/Movie/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Movie>> GetMovie(int id)
+        public async Task<ActionResult<MovieDTO>> GetMovie(int id)
         {
-            var movie = await _context.movies.FindAsync(id);
+            var movie = await _context.Movies.FindAsync(id);
 
             if (movie == null)
             {
                 return NotFound();
             }
 
-            return movie;
+            return ItemToDTO(movie);
         }
 
-        
+
         [HttpPut("{id}")]
         public async Task<IActionResult> PutMovie(int id, Movie movie)
         {
-            if (id != movie.ID)
+            if (id != movie.Id)
             {
                 return BadRequest();
             }
@@ -72,28 +73,26 @@ namespace CinemaApp.Controllers
         }
 
         // POST: api/Movie
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
         public async Task<ActionResult<Movie>> PostMovie(Movie movie)
         {
-            _context.movies.Add(movie);
+            _context.Movies.Add(movie);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetMovie", new { id = movie.ID }, movie);
+            return CreatedAtAction("GetMovie", new { id = movie.Id }, movie);
         }
 
         // DELETE: api/Movie/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<Movie>> DeleteMovie(int id)
         {
-            var movie = await _context.movies.FindAsync(id);
+            var movie = await _context.Movies.FindAsync(id);
             if (movie == null)
             {
                 return NotFound();
             }
 
-            _context.movies.Remove(movie);
+            _context.Movies.Remove(movie);
             await _context.SaveChangesAsync();
 
             return movie;
@@ -101,7 +100,21 @@ namespace CinemaApp.Controllers
 
         private bool MovieExists(int id)
         {
-            return _context.movies.Any(e => e.ID == id);
+            return _context.Movies.Any(e => e.Id == id);
         }
+
+        private static MovieDTO ItemToDTO(Movie movie) =>
+           new MovieDTO
+           {
+               Id = movie.Id,
+               Title = movie.Title,
+               Description = movie.Description,
+               ReleasedDate = movie.ReleasedDate,
+               Rating = movie.Rating,
+               Duration = movie.Duration
+
+            };
+
+
     }
 }
