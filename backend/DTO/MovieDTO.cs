@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CinemaApp.Models
+namespace CinemaApp.DTO
 {
-    public class Movie
+    public class MovieDTO
     {
 
         public int Id { get; set; }
@@ -14,15 +14,6 @@ namespace CinemaApp.Models
         public DateTime ReleasedDate { get; set; }
         public float Rating { get; set; }
         public TimeSpan Duration { get; set; }
-        public Movie()
-        { }
-        public Movie(string T, string D, DateTime RD, float R, TimeSpan Dur)
-        {
-            Title = T;
-            Description = D;
-            ReleasedDate = RD;
-            Rating = R;
-            Duration = Dur;
-        }
+
     }
 }
