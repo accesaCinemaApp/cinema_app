@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CinemaApp.DTO;
+using CinemaApp.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using CinemaApp.Models;
 
 namespace CinemaApp.Controllers
 {
@@ -11,23 +12,23 @@ namespace CinemaApp.Controllers
     [ApiController]
     public class BookingController : ControllerBase
     {
-        private readonly BookingContext _context;
+        private readonly CinemaContext _context;
 
-        public BookingController(BookingContext context)
+        public BookingController(CinemaContext context)
         {
             _context = context;
         }
 
         // GET: api/Bookings
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Booking>>> GetBookings()
+        public async Task<ActionResult<IEnumerable<BookingDTO>>> GetBookings()
         {
-            return await _context.Bookings.ToListAsync();
+            return await _context.Bookings.Select(booking => ItemToDTO(booking)).ToListAsync();
         }
 
         // GET: api/Bookings/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Booking>> GetBooking(int id)
+        public async Task<ActionResult<BookingDTO>> GetBooking(int id)
         {
             var booking = await _context.Bookings.FindAsync(id);
 
@@ -36,56 +37,53 @@ namespace CinemaApp.Controllers
                 return NotFound();
             }
 
-            return booking;
+            return ItemToDTO(booking);
         }
 
         // PUT: api/Bookings/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutBooking(int id, Booking booking)
+        public async Task<IActionResult> PutBooking(int id, BookingDTO booking)
         {
             if (id != booking.ID)
             {
                 return BadRequest();
             }
 
+            if (!BookingExists(id))
+            {
+                return NotFound();
+            }
             _context.Entry(booking).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!BookingExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            //check for Seats, if null it means that they will not be changed
+            if (booking.Seats.Equals(null))
+                _context.Entry(booking).Property("Seats").IsModified = false;
+            //same thing for TimeSlot
+            if (booking.TimeSlot.Equals(null))
+                _context.Entry(booking).Property("TimeSlot").IsModified = false;
+            //email should not be changed, as that means that the whole email confirmation is compromised
+            await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
         // POST: api/Bookings
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Booking>> PostBooking(Booking booking)
+        public async Task<ActionResult<Booking>> PostBooking(BookingDTO booking)
         {
-            _context.Bookings.Add(booking);
+            await _context.Bookings.AddAsync(new Booking()
+            {
+                Email = booking.Email,
+                Seats = booking.Seats,
+                TimeSlot = booking.TimeSlot
+            });
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetBooking", new { id = booking.ID }, booking);
+            return CreatedAtAction(nameof(GetBooking), new { id = booking.ID }, booking);
         }
 
         // DELETE: api/Bookings/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Booking>> DeleteBooking(int id)
+        public async Task<ActionResult<BookingDTO>> DeleteBooking(int id)
         {
             var booking = await _context.Bookings.FindAsync(id);
             if (booking == null)
@@ -96,12 +94,23 @@ namespace CinemaApp.Controllers
             _context.Bookings.Remove(booking);
             await _context.SaveChangesAsync();
 
-            return booking;
+            return NoContent();
         }
 
         private bool BookingExists(int id)
         {
             return _context.Bookings.Any(e => e.ID == id);
+        }
+
+        private static BookingDTO ItemToDTO(Booking booking)
+        {
+            return new BookingDTO
+            {
+                Email = booking.Email,
+                ID = booking.ID,
+                Seats = booking.Seats,
+                TimeSlot = booking.TimeSlot
+            };
         }
     }
 }
