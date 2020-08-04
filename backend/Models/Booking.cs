@@ -5,12 +5,14 @@ using System.Threading.Tasks;
 
 namespace CinemaApp.Models
 {
-    public class TimeSlot
+    public class Booking
     {
         public int ID { get; set; }
-        public DateTime Time { get; set; }
-        public CinemaRoom CinemaRoom { get; set; }
-        public Movie Movie { get; set; }
+        public string Email { get; set; }
+
+        public TimeSlot TimeSlot { get; set; }
+
+        public List<Seat> Seats { get; set; }
 
     }
 }
