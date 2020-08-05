@@ -8,15 +8,15 @@ using Microsoft.EntityFrameworkCore;
 using CinemaApp.Models;
 using CinemaApp.DTO;
 
-namespace CinemaApp.Controllers
+namespace CinemaApp.API
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class MovieController : ControllerBase
+    public class MoviesController : ControllerBase
     {
         private readonly CinemaDbContext _context;
 
-        public MovieController(CinemaDbContext context)
+        public MoviesController(CinemaDbContext context)
         {
             _context = context;
         }
@@ -114,7 +114,5 @@ namespace CinemaApp.Controllers
                Duration = movie.Duration
 
             };
-
-
     }
 }
