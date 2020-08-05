@@ -7,7 +7,7 @@ using CinemaApp.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace CinemaApp.Controllers
+namespace CinemaApp.API
 {
     [Route("api/[controller]")]
     [ApiController]

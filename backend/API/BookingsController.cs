@@ -6,15 +6,15 @@ using CinemaApp.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace CinemaApp.Controllers
+namespace CinemaApp.API
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BookingController : ControllerBase
+    public class BookingAPIController : ControllerBase
     {
         private readonly CinemaDbContext _context;
 
-        public BookingController(CinemaDbContext context)
+        public BookingAPIController(CinemaDbContext context)
         {
             _context = context;
         }
