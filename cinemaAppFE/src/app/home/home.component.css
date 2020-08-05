@@ -1,0 +1,18 @@
+li{
+    list-style-type: none; 
+}
+
+.column-0{
+width:50%;
+display:block;
+}
+
+.column-1{
+    width:50%;
+    display:block;
+}
+
+.row{
+    display:flex;
+    flex-direction: row;
+}

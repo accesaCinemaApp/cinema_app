@@ -1,5 +1,31 @@
 <div>
     <h2>Currently running</h2>
+<<<<<<< HEAD
     <li *ngFor="let movie of movies">
         <a>{{movie.title}}</a> </li>
     </div>
+=======
+
+
+    <div class="row">
+        <div class="column-0">
+            <li *ngFor="let movie of movies; index as i">
+                <div *ngIf="i % 2==0">
+                    <app-movie [movie]="movie"></app-movie>
+                </div>
+            </li>
+        </div>
+
+        <div class="column-1">
+            <li *ngFor="let movie of movies; index as i">
+                <div *ngIf="i % 2==1">
+                    <app-movie [movie]="movie"></app-movie>
+                </div>
+            </li>
+        </div>
+
+
+    </div>
+
+</div>
+>>>>>>> f4d2c61... Added service, pages, navigation
