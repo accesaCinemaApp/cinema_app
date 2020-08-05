@@ -54,13 +54,14 @@ namespace CinemaApp.Controllers
                 return NotFound();
             }
             _context.Entry(booking).State = EntityState.Modified;
-            //check for Seats, if null it means that they will not be changed
-            if (booking.Seats.Equals(null))
+            if ((booking.Seats.Equals(null)))
+            {
                 _context.Entry(booking).Property("Seats").IsModified = false;
-            //same thing for TimeSlot
+            }
             if (booking.TimeSlot.Equals(null))
+            {
                 _context.Entry(booking).Property("TimeSlot").IsModified = false;
-            //email should not be changed, as that means that the whole email confirmation is compromised
+            }
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -70,14 +71,9 @@ namespace CinemaApp.Controllers
         [HttpPost]
         public async Task<ActionResult<Booking>> PostBooking(BookingDTO booking)
         {
-            await _context.Bookings.AddAsync(new Booking()
-            {
-                Email = booking.Email,
-                Seats = booking.Seats,
-                TimeSlot = booking.TimeSlot
-            });
+            await _context.Bookings.AddAsync(new Booking
+            {Email = booking.Email, Seats = booking.Seats, TimeSlot = booking.TimeSlot});
             await _context.SaveChangesAsync();
-
             return CreatedAtAction(nameof(GetBooking), new { id = booking.ID }, booking);
         }
 
