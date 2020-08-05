@@ -114,7 +114,5 @@ namespace CinemaApp.Controllers
                Duration = movie.Duration
 
             };
-
-
     }
 }
