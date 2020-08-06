@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
+using CinemaApp.DTO;
 
 namespace CinemaApp.Models
 {
@@ -13,6 +14,6 @@ namespace CinemaApp.Models
         public CinemaRoom CinemaRoom { get; set; }
         public Movie Movie { get; set; }
 
-       
+        
     }
 }

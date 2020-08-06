@@ -71,8 +71,14 @@ namespace CinemaApp.Controllers
         [HttpPost]
         public async Task<ActionResult<Booking>> PostBooking(BookingDTO booking)
         {
+            var seats = booking.Seats.Select(seat => new Seat { ID = seat.ID, Nr = seat.Nr, Row = seat.Row }).ToList();
+            var timeSlotDTO = new TimeSlot
+            {
+                ID = booking.TimeSlot.ID, Time = booking.TimeSlot.Time, CinemaRoom = booking.TimeSlot.CinemaRoom,
+                Movie = booking.TimeSlot.Movie
+            };
             await _context.Bookings.AddAsync(new Booking
-            {Email = booking.Email, Seats = booking.Seats, TimeSlot = booking.TimeSlot});
+            {Email = booking.Email, Seats = seats, TimeSlot = timeSlotDTO});
             await _context.SaveChangesAsync();
             return CreatedAtAction(nameof(GetBooking), new { id = booking.ID }, booking);
         }
@@ -100,12 +106,14 @@ namespace CinemaApp.Controllers
 
         private static BookingDTO ItemToDTO(Booking booking)
         {
+            var seatDTOs= booking.Seats.Select(seat =>  new SeatDTO { ID = seat.ID, Nr = seat.Nr, Row = seat.Row }).ToList();
+            var timeSlotDTO= new TimeSlotDTO { ID = booking.TimeSlot.ID, Time = booking.TimeSlot.Time, CinemaRoom = booking.TimeSlot.CinemaRoom, Movie = booking.TimeSlot.Movie };
             return new BookingDTO
             {
                 Email = booking.Email,
                 ID = booking.ID,
-                Seats = booking.Seats,
-                TimeSlot = booking.TimeSlot
+                Seats = seatDTOs,
+                TimeSlot = timeSlotDTO
             };
         }
     }

@@ -1,9 +1,9 @@
-﻿using System;
-using CinemaApp.DTO;
+﻿using CinemaApp.Models;
+using System;
 
-namespace CinemaApp.Models
+namespace CinemaApp.DTO
 {
-    public class Seat : IEquatable<Seat>
+    public class SeatDTO
     {
         // data fields
         public int ID { get; set; }
@@ -15,6 +15,7 @@ namespace CinemaApp.Models
         {
             return other != null && Row == other.Row && Nr == other.Nr;
         }
+
         
-    };
+    }
 }
