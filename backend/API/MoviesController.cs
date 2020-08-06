@@ -46,7 +46,7 @@ namespace CinemaApp.API
         [HttpPut("{id}")]
         public async Task<IActionResult> PutMovie(int id, Movie movie)
         {
-            if (id != movie.Id)
+            if (id != movie.ID)
             {
                 return BadRequest();
             }
@@ -79,7 +79,7 @@ namespace CinemaApp.API
             _context.Movies.Add(movie);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetMovie", new { id = movie.Id }, movie);
+            return CreatedAtAction("GetMovie", new { id = movie.ID }, movie);
         }
 
         // DELETE: api/Movie/5
@@ -100,13 +100,13 @@ namespace CinemaApp.API
 
         private bool MovieExists(int id)
         {
-            return _context.Movies.Any(e => e.Id == id);
+            return _context.Movies.Any(e => e.ID == id);
         }
 
         private static MovieDTO ItemToDTO(Movie movie) =>
            new MovieDTO
            {
-               Id = movie.Id,
+               Id = movie.ID,
                Title = movie.Title,
                Description = movie.Description,
                ReleasedDate = movie.ReleasedDate,
