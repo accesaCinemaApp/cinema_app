@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace CinemaApp.Migrations
 {
-    public partial class Version1 : Migration
+    public partial class Version2 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -27,10 +27,10 @@ namespace CinemaApp.Migrations
                     ID = table.Column<string>(type: "varchar(250)", nullable: false),
                     Title = table.Column<string>(type: "varchar(250)", nullable: true),
                     Description = table.Column<string>(type: "varchar(250)", nullable: true),
-                    ReleaseData = table.Column<DateTime>(name: "Release Data", type: "data", nullable: false),
+                    ReleaseData = table.Column<DateTime>(name: "Release Data", type: "date", nullable: false),
                     Rating = table.Column<double>(type: "float", nullable: false),
-                    Duration = table.Column<TimeSpan>(nullable: false),
-                    CoverPhoto = table.Column<byte[]>(rowVersion: true, nullable: true)
+                    Duration = table.Column<string>(type: "varchar(250)", nullable: true),
+                    CoverPhoto = table.Column<string>(type: "varchar(250)", nullable: true)
                 },
                 constraints: table =>
                 {

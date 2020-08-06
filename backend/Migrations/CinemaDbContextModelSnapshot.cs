@@ -61,19 +61,17 @@ namespace CinemaApp.Migrations
                         .HasColumnName("ID")
                         .HasColumnType("varchar(250)");
 
-                    b.Property<byte[]>("CoverPhoto")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("rowversion");
+                    b.Property<string>("CoverPhoto")
+                        .HasColumnName("CoverPhoto")
+                        .HasColumnType("varchar(250)");
 
                     b.Property<string>("Description")
                         .HasColumnName("Description")
                         .HasColumnType("varchar(250)");
 
-                    b.Property<TimeSpan>("Duration")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("time");
+                    b.Property<string>("Duration")
+                        .HasColumnName("Duration")
+                        .HasColumnType("varchar(250)");
 
                     b.Property<double>("Rating")
                         .HasColumnName("Rating")
@@ -81,7 +79,7 @@ namespace CinemaApp.Migrations
 
                     b.Property<DateTime>("ReleasedDate")
                         .HasColumnName("Release Data")
-                        .HasColumnType("data");
+                        .HasColumnType("date");
 
                     b.Property<string>("Title")
                         .HasColumnName("Title")

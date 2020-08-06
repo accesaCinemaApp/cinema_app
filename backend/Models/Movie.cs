@@ -16,20 +16,20 @@ namespace CinemaApp.Models
         public string Title { get; set; }
         [Column("Description", TypeName = "varchar(250)")]
         public string Description { get; set; }
-        [Column("Release Data", TypeName = "data")]
+        [Column("Release Data", TypeName = "date")]
         public DateTime ReleasedDate { get; set; }
         [Column("Rating", TypeName = "float")]
         public float Rating { get; set; }
-        [Timestamp]
-        public TimeSpan Duration { get; set; }
-        [Timestamp]
-        public byte[] CoverPhoto { get; set; }
+        [Column("Duration", TypeName = "varchar(250)")]
+        public string Duration { get; set; }
+        [Column("CoverPhoto", TypeName = "varchar(250)")]
+        public string CoverPhoto { get; set; }
 
 
 
         public Movie()
         { }
-        public Movie(string T, string D, DateTime RD, float R, TimeSpan Dur)
+        public Movie(string T, string D, DateTime RD, float R, string Dur)
         {
             Title = T;
             Description = D;

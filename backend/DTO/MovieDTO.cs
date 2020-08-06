@@ -11,7 +11,9 @@ namespace CinemaApp.DTO
         public string Description { get; set; }
         public DateTime ReleasedDate { get; set; }
         public float Rating { get; set; }
-        public TimeSpan Duration { get; set; }
+        public string Duration { get; set; }
+        public string CoverPhoto { get; set; }
+
 
         public MovieDTO(Movie movie)
         {
@@ -21,6 +23,7 @@ namespace CinemaApp.DTO
             ReleasedDate = movie.ReleasedDate;
             Rating = movie.Rating;
             Duration = movie.Duration;
+            CoverPhoto = movie.CoverPhoto;
         }
 
         public Movie DTOToModel()
