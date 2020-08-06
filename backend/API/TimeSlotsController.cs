@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CinemaApp.Models;
+using CinemaApp.DTO;
 
 namespace CinemaApp.API
 {
@@ -22,14 +23,14 @@ namespace CinemaApp.API
 
         // GET: api/TimeSlots
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TimeSlot>>> GetTimeSlots()
+        public async Task<ActionResult<IEnumerable<TimeSlotDTO>>> GetTimeSlots()
         {
-            return await _context.TimeSlots.ToListAsync();
+            return await _context.TimeSlots.Select(timeSlot => ItemToDTO(timeSlot)).ToListAsync();
         }
 
         // GET: api/TimeSlots/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<TimeSlot>> GetTimeSlot(int id)
+        public async Task<ActionResult<TimeSlotDTO>> GetTimeSlot(int id)
         {
             var timeSlot = await _context.TimeSlots.FindAsync(id);
 
@@ -38,37 +39,35 @@ namespace CinemaApp.API
                 return NotFound();
             }
 
-            return timeSlot;
+            return ItemToDTO(timeSlot);
         }
 
         // PUT: api/TimeSlots/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTimeSlot(int id, TimeSlot timeSlot)
+        public async Task<IActionResult> PutTimeSlot(int id, TimeSlotDTO timeSlot)
         {
             if (id != timeSlot.ID)
             {
                 return BadRequest();
             }
 
-            _context.Entry(timeSlot).State = EntityState.Modified;
+            if (!TimeSlotExists(id))
+            {
+                return NotFound();
+            }
 
-            try
+            _context.Entry(timeSlot).State = EntityState.Modified;
+            if ((timeSlot.CinemaRoom.Equals(null)))
             {
-                await _context.SaveChangesAsync();
+                _context.Entry(timeSlot).Property("CinemaRoom").IsModified = false;
             }
-            catch (DbUpdateConcurrencyException)
+            if (timeSlot.Movie.Equals(null))
             {
-                if (!TimeSlotExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                _context.Entry(timeSlot).Property("Movie").IsModified = false;
             }
+            await _context.SaveChangesAsync();
 
             return NoContent();
         }
@@ -77,12 +76,12 @@ namespace CinemaApp.API
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<TimeSlot>> PostTimeSlot(TimeSlot timeSlot)
+        public async Task<ActionResult<TimeSlot>> PostTimeSlot(TimeSlotDTO timeSlot)
         {
-            _context.TimeSlots.Add(timeSlot);
+            await _context.TimeSlots.AddAsync(timeSlot.DTOToModel());
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetTimeSlot", new { id = timeSlot.ID }, timeSlot);
+            return CreatedAtAction(nameof(GetTimeSlot), new { id = timeSlot.ID }, timeSlot);
         }
 
         // DELETE: api/TimeSlots/5
@@ -105,5 +104,7 @@ namespace CinemaApp.API
         {
             return _context.TimeSlots.Any(e => e.ID == id);
         }
+
+        private static TimeSlotDTO ItemToDTO(TimeSlot timeSlot) => new TimeSlotDTO(timeSlot);
     }
 }

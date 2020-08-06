@@ -10,11 +10,11 @@ namespace CinemaApp.API
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BookingAPIController : ControllerBase
+    public class BookingsController : ControllerBase
     {
         private readonly CinemaDbContext _context;
 
-        public BookingAPIController(CinemaDbContext context)
+        public BookingsController(CinemaDbContext context)
         {
             _context = context;
         }
@@ -54,13 +54,14 @@ namespace CinemaApp.API
                 return NotFound();
             }
             _context.Entry(booking).State = EntityState.Modified;
-            //check for Seats, if null it means that they will not be changed
-            if (booking.Seats.Equals(null))
+            if ((booking.Seats.Equals(null)))
+            {
                 _context.Entry(booking).Property("Seats").IsModified = false;
-            //same thing for TimeSlot
+            }
             if (booking.TimeSlot.Equals(null))
+            {
                 _context.Entry(booking).Property("TimeSlot").IsModified = false;
-            //email should not be changed, as that means that the whole email confirmation is compromised
+            }
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -70,12 +71,7 @@ namespace CinemaApp.API
         [HttpPost]
         public async Task<ActionResult<Booking>> PostBooking(BookingDTO booking)
         {
-            await _context.Bookings.AddAsync(new Booking()
-            {
-                Email = booking.Email,
-                Seats = booking.Seats,
-                TimeSlot = booking.TimeSlot
-            });
+            await _context.Bookings.AddAsync(booking.DTOToModel());
             await _context.SaveChangesAsync();
 
             return CreatedAtAction(nameof(GetBooking), new { id = booking.ID }, booking);
@@ -102,15 +98,6 @@ namespace CinemaApp.API
             return _context.Bookings.Any(e => e.ID == id);
         }
 
-        private static BookingDTO ItemToDTO(Booking booking)
-        {
-            return new BookingDTO
-            {
-                Email = booking.Email,
-                ID = booking.ID,
-                Seats = booking.Seats,
-                TimeSlot = booking.TimeSlot
-            };
-        }
+        private static BookingDTO ItemToDTO(Booking booking) => new BookingDTO(booking);
     }
 }

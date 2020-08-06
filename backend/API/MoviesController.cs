@@ -25,7 +25,7 @@ namespace CinemaApp.API
         [HttpGet]
         public async Task<ActionResult<IEnumerable<MovieDTO>>> GetMovies()
         {
-            return await _context.Movies.Select(movie=> ItemToDTO(movie)).ToListAsync();
+            return await _context.Movies.Select(movie => ItemToDTO(movie)).ToListAsync();
         }
 
         // GET: api/Movie/5
@@ -44,42 +44,32 @@ namespace CinemaApp.API
 
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutMovie(int id, Movie movie)
+        public async Task<IActionResult> PutMovie(int id, MovieDTO movie)
         {
-            if (id != movie.Id)
+            if (id != movie.ID)
             {
                 return BadRequest();
             }
 
-            _context.Entry(movie).State = EntityState.Modified;
+            if (!MovieExists(id))
+            {
+                return NotFound();
+            }
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!MovieExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            _context.Entry(movie).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
         // POST: api/Movie
         [HttpPost]
-        public async Task<ActionResult<Movie>> PostMovie(Movie movie)
+        public async Task<ActionResult<Movie>> PostMovie(MovieDTO movie)
         {
-            _context.Movies.Add(movie);
+            _context.Movies.Add(movie.DTOToModel());
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetMovie", new { id = movie.Id }, movie);
+            return CreatedAtAction(nameof(GetMovie), new { id = movie.ID }, movie);
         }
 
         // DELETE: api/Movie/5
@@ -100,19 +90,9 @@ namespace CinemaApp.API
 
         private bool MovieExists(int id)
         {
-            return _context.Movies.Any(e => e.Id == id);
+            return _context.Movies.Any(e => e.ID == id);
         }
 
-        private static MovieDTO ItemToDTO(Movie movie) =>
-           new MovieDTO
-           {
-               Id = movie.Id,
-               Title = movie.Title,
-               Description = movie.Description,
-               ReleasedDate = movie.ReleasedDate,
-               Rating = movie.Rating,
-               Duration = movie.Duration
-
-            };
+        private static MovieDTO ItemToDTO(Movie movie) => new MovieDTO(movie);
     }
 }

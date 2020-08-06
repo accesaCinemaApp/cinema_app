@@ -10,7 +10,7 @@ namespace CinemaApp.Models
     public class Movie
     {
         [Key]
-        public int Id { get; set; }
+        public int ID { get; set; }
         [Column("varchar(250)")]
         public string Title { get; set; }
         [Column("varchar(250)")]
