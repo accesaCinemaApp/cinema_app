@@ -35,7 +35,8 @@ namespace CinemaApp.DTO
                 Description = Description,
                 ReleasedDate = ReleasedDate,
                 Rating = Rating,
-                Duration = Duration
+                Duration = Duration,
+                CoverPhoto = CoverPhoto
             };
         }
     }
