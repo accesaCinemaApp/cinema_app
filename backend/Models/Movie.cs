@@ -10,19 +10,23 @@ namespace CinemaApp.Models
     public class Movie
     {
         [Key]
+        [Column("ID", TypeName = "varchar(250)")]
         public int ID { get; set; }
-        [Column("varchar(250)")]
+        [Column("Title", TypeName = "varchar(250)")]
         public string Title { get; set; }
-        [Column("varchar(250)")]
+        [Column("Description", TypeName = "varchar(250)")]
         public string Description { get; set; }
-        [Column("date")]
+        [Column("Release Data", TypeName = "data")]
         public DateTime ReleasedDate { get; set; }
-        [Column("float")]
+        [Column("Rating", TypeName = "float")]
         public float Rating { get; set; }
-        [Column("time")]
+        [Timestamp]
         public TimeSpan Duration { get; set; }
-        [Column("image")]
+        [Timestamp]
         public byte[] CoverPhoto { get; set; }
+
+
+
         public Movie()
         { }
         public Movie(string T, string D, DateTime RD, float R, TimeSpan Dur)

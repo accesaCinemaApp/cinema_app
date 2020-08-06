@@ -11,30 +11,30 @@ namespace CinemaApp.Migrations
                 name: "CinemaRooms",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
+                    ID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     RoomNr = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CinemaRooms", x => x.Id);
+                    table.PrimaryKey("PK_CinemaRooms", x => x.ID);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Movies",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    varchar250 = table.Column<string>(name: "varchar(250)", nullable: true),
-                    date = table.Column<DateTime>(nullable: false),
-                    @float = table.Column<float>(name: "float", nullable: false),
-                    time = table.Column<TimeSpan>(nullable: false),
-                    image = table.Column<byte[]>(nullable: true)
+                    ID = table.Column<string>(type: "varchar(250)", nullable: false),
+                    Title = table.Column<string>(type: "varchar(250)", nullable: true),
+                    Description = table.Column<string>(type: "varchar(250)", nullable: true),
+                    ReleaseData = table.Column<DateTime>(name: "Release Data", type: "data", nullable: false),
+                    Rating = table.Column<double>(type: "float", nullable: false),
+                    Duration = table.Column<TimeSpan>(nullable: false),
+                    CoverPhoto = table.Column<byte[]>(rowVersion: true, nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Movies", x => x.Id);
+                    table.PrimaryKey("PK_Movies", x => x.ID);
                 });
 
             migrationBuilder.CreateTable(
@@ -44,23 +44,23 @@ namespace CinemaApp.Migrations
                     ID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Time = table.Column<DateTime>(nullable: false),
-                    CinemaRoomId = table.Column<int>(nullable: true),
-                    MovieId = table.Column<int>(nullable: true)
+                    CinemaRoomID = table.Column<int>(nullable: true),
+                    MovieID = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_TimeSlots", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_TimeSlots_CinemaRooms_CinemaRoomId",
-                        column: x => x.CinemaRoomId,
+                        name: "FK_TimeSlots_CinemaRooms_CinemaRoomID",
+                        column: x => x.CinemaRoomID,
                         principalTable: "CinemaRooms",
-                        principalColumn: "Id",
+                        principalColumn: "ID",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_TimeSlots_Movies_MovieId",
-                        column: x => x.MovieId,
+                        name: "FK_TimeSlots_Movies_MovieID",
+                        column: x => x.MovieID,
                         principalTable: "Movies",
-                        principalColumn: "Id",
+                        principalColumn: "ID",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -88,16 +88,16 @@ namespace CinemaApp.Migrations
                 name: "Seat",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
+                    ID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Row = table.Column<string>(nullable: false),
                     Nr = table.Column<int>(nullable: false),
                     BookingID = table.Column<int>(nullable: true),
-                    CinemaRoomId = table.Column<int>(nullable: true)
+                    CinemaRoomID = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Seat", x => x.Id);
+                    table.PrimaryKey("PK_Seat", x => x.ID);
                     table.ForeignKey(
                         name: "FK_Seat_Bookings_BookingID",
                         column: x => x.BookingID,
@@ -105,10 +105,10 @@ namespace CinemaApp.Migrations
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Seat_CinemaRooms_CinemaRoomId",
-                        column: x => x.CinemaRoomId,
+                        name: "FK_Seat_CinemaRooms_CinemaRoomID",
+                        column: x => x.CinemaRoomID,
                         principalTable: "CinemaRooms",
-                        principalColumn: "Id",
+                        principalColumn: "ID",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -123,19 +123,19 @@ namespace CinemaApp.Migrations
                 column: "BookingID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Seat_CinemaRoomId",
+                name: "IX_Seat_CinemaRoomID",
                 table: "Seat",
-                column: "CinemaRoomId");
+                column: "CinemaRoomID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TimeSlots_CinemaRoomId",
+                name: "IX_TimeSlots_CinemaRoomID",
                 table: "TimeSlots",
-                column: "CinemaRoomId");
+                column: "CinemaRoomID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TimeSlots_MovieId",
+                name: "IX_TimeSlots_MovieID",
                 table: "TimeSlots",
-                column: "MovieId");
+                column: "MovieID");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

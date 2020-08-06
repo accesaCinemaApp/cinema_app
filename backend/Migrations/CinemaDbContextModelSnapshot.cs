@@ -41,7 +41,7 @@ namespace CinemaApp.Migrations
 
             modelBuilder.Entity("CinemaApp.Models.CinemaRoom", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -49,50 +49,52 @@ namespace CinemaApp.Migrations
                     b.Property<int>("RoomNr")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("ID");
 
                     b.ToTable("CinemaRooms");
                 });
 
             modelBuilder.Entity("CinemaApp.Models.Movie", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<string>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnName("ID")
+                        .HasColumnType("varchar(250)");
 
                     b.Property<byte[]>("CoverPhoto")
-                        .HasColumnName("image")
-                        .HasColumnType("varbinary(max)");
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
 
                     b.Property<string>("Description")
-                        .HasColumnName("varchar(250)")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnName("Description")
+                        .HasColumnType("varchar(250)");
 
                     b.Property<TimeSpan>("Duration")
-                        .HasColumnName("time")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("time");
 
-                    b.Property<float>("Rating")
-                        .HasColumnName("float")
-                        .HasColumnType("real");
+                    b.Property<double>("Rating")
+                        .HasColumnName("Rating")
+                        .HasColumnType("float");
 
                     b.Property<DateTime>("ReleasedDate")
-                        .HasColumnName("date")
-                        .HasColumnType("datetime2");
+                        .HasColumnName("Release Data")
+                        .HasColumnType("data");
 
                     b.Property<string>("Title")
-                        .HasColumnName("varchar(250)")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnName("Title")
+                        .HasColumnType("varchar(250)");
 
-                    b.HasKey("Id");
+                    b.HasKey("ID");
 
                     b.ToTable("Movies");
                 });
 
             modelBuilder.Entity("CinemaApp.Models.Seat", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -100,7 +102,7 @@ namespace CinemaApp.Migrations
                     b.Property<int?>("BookingID")
                         .HasColumnType("int");
 
-                    b.Property<int?>("CinemaRoomId")
+                    b.Property<int?>("CinemaRoomID")
                         .HasColumnType("int");
 
                     b.Property<int>("Nr")
@@ -110,11 +112,11 @@ namespace CinemaApp.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(1)");
 
-                    b.HasKey("Id");
+                    b.HasKey("ID");
 
                     b.HasIndex("BookingID");
 
-                    b.HasIndex("CinemaRoomId");
+                    b.HasIndex("CinemaRoomID");
 
                     b.ToTable("Seat");
                 });
@@ -126,20 +128,20 @@ namespace CinemaApp.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("CinemaRoomId")
+                    b.Property<int?>("CinemaRoomID")
                         .HasColumnType("int");
 
-                    b.Property<int?>("MovieId")
-                        .HasColumnType("int");
+                    b.Property<string>("MovieID")
+                        .HasColumnType("varchar(250)");
 
                     b.Property<DateTime>("Time")
                         .HasColumnType("datetime2");
 
                     b.HasKey("ID");
 
-                    b.HasIndex("CinemaRoomId");
+                    b.HasIndex("CinemaRoomID");
 
-                    b.HasIndex("MovieId");
+                    b.HasIndex("MovieID");
 
                     b.ToTable("TimeSlots");
                 });
@@ -153,24 +155,24 @@ namespace CinemaApp.Migrations
 
             modelBuilder.Entity("CinemaApp.Models.Seat", b =>
                 {
-                    b.HasOne("CinemaApp.Models.Booking", "Booking")
+                    b.HasOne("CinemaApp.Models.Booking", null)
                         .WithMany("Seats")
                         .HasForeignKey("BookingID");
 
                     b.HasOne("CinemaApp.Models.CinemaRoom", null)
                         .WithMany("Seats")
-                        .HasForeignKey("CinemaRoomId");
+                        .HasForeignKey("CinemaRoomID");
                 });
 
             modelBuilder.Entity("CinemaApp.Models.TimeSlot", b =>
                 {
                     b.HasOne("CinemaApp.Models.CinemaRoom", "CinemaRoom")
                         .WithMany()
-                        .HasForeignKey("CinemaRoomId");
+                        .HasForeignKey("CinemaRoomID");
 
                     b.HasOne("CinemaApp.Models.Movie", "Movie")
                         .WithMany()
-                        .HasForeignKey("MovieId");
+                        .HasForeignKey("MovieID");
                 });
 #pragma warning restore 612, 618
         }
