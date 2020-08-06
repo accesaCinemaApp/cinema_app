@@ -14,6 +14,7 @@ namespace CinemaApp.DTO
         public float Rating { get; set; }
         [JsonConverter(typeof(TimeSpanConverter))]
         public TimeSpan Duration { get; set; }
+        public byte[] CoverPhoto { get; set; }
 
         public MovieDTO() { }
 
@@ -25,6 +26,7 @@ namespace CinemaApp.DTO
             ReleasedDate = movie.ReleasedDate;
             Rating = movie.Rating;
             Duration = movie.Duration;
+            CoverPhoto = movie.CoverPhoto;
         }
 
         public Movie DTOToModel()
@@ -36,7 +38,8 @@ namespace CinemaApp.DTO
                 Description = Description,
                 ReleasedDate = ReleasedDate,
                 Rating = Rating,
-                Duration = Duration
+                Duration = Duration,
+                CoverPhoto = CoverPhoto
             };
         }
     }

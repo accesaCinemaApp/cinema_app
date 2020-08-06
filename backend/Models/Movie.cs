@@ -13,15 +13,8 @@ namespace CinemaApp.Models
         public float Rating { get; set; }
         [JsonConverter(typeof(TimeSpanConverter))]
         public TimeSpan Duration { get; set; }
+        public byte[] CoverPhoto { get; set; }
         public Movie()
         { }
-        public Movie(string T, string D, DateTime RD, float R, TimeSpan Dur)
-        {
-            Title = T;
-            Description = D;
-            ReleasedDate = RD;
-            Rating = R;
-            Duration = Dur;
-        }
     }
 }
