@@ -109,6 +109,7 @@ namespace CinemaApp.API
         private static CinemaRoomDTO ItemToDTO(CinemaRoom cinemaRoom) =>
             new CinemaRoomDTO
             {
+                Id = cinemaRoom.Id,
                 RoomNr = cinemaRoom.RoomNr,
                 Seats = cinemaRoom.Seats
             };

@@ -10,10 +10,7 @@ namespace CinemaApp.DTO
     {
         public int ID { get; set; }
         public string Email { get; set; }
-
         public TimeSlot TimeSlot { get; set; }
-
         public List<Seat> Seats { get; set; }
-
     }
 }
