@@ -43,44 +43,35 @@ namespace CinemaApp.API
 
         // POST api/<CinemaRoomsController>
         [HttpPost]
-        public async Task<ActionResult<CinemaRoomDTO>> PostCinemaRoom(CinemaRoom cinemaRoom)
+        public async Task<ActionResult<CinemaRoomDTO>> PostCinemaRoom(CinemaRoomDTO cinemaRoom)
         {
-            _context.CinemaRooms.Add(new CinemaRoom
-            {
-                RoomNr = cinemaRoom.RoomNr,
-                Seats = cinemaRoom.Seats
-            });
+            await _context.CinemaRooms.AddAsync(cinemaRoom.DTOToModel());
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetCinemaRoom), new { id = cinemaRoom.RoomNr }, cinemaRoom);
+            return CreatedAtAction(nameof(GetCinemaRoom), new { id = cinemaRoom.ID }, cinemaRoom);
         }
 
         // PUT api/<CinemaRoomsController>/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCinemaRoom(int id, CinemaRoom cinemaRoom)
+        public async Task<IActionResult> PutCinemaRoom(int id, CinemaRoomDTO cinemaRoom)
         {
-            if (id != cinemaRoom.RoomNr)
+            if (id != cinemaRoom.ID)
             {
                 return BadRequest();
             }
 
-            _context.Entry(cinemaRoom).State = EntityState.Modified;
+            if (!CinemaRoomExists(id))
+            {
+                return NotFound();
+            }
 
-            try
+            _context.Entry(cinemaRoom).State = EntityState.Modified;
+            if ((cinemaRoom.Seats.Equals(null)))
             {
-                await _context.SaveChangesAsync();
+                _context.Entry(cinemaRoom).Property("Seats").IsModified = false;
             }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!CinemaRoomExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+
+            await _context.SaveChangesAsync();
 
             return NoContent();
         }
@@ -103,15 +94,9 @@ namespace CinemaApp.API
 
         private bool CinemaRoomExists(int id)
         {
-            return _context.CinemaRooms.Any(e => e.RoomNr == id);
+            return _context.CinemaRooms.Any(e => e.ID == id);
         }
 
-        private static CinemaRoomDTO ItemToDTO(CinemaRoom cinemaRoom) =>
-            new CinemaRoomDTO
-            {
-                Id = cinemaRoom.Id,
-                RoomNr = cinemaRoom.RoomNr,
-                Seats = cinemaRoom.Seats
-            };
+        private static CinemaRoomDTO ItemToDTO(CinemaRoom cinemaRoom) => new CinemaRoomDTO(cinemaRoom);
     }
 }

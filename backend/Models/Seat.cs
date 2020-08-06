@@ -5,6 +5,7 @@ namespace CinemaApp.Models
     public class Seat : IEquatable<Seat>
     {
         // data fields
+        public int ID { get; set; }
         public char Row { get; set; }
         public int Nr { get; set; }
 

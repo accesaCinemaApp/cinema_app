@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace CinemaApp.Models
 {
@@ -12,7 +8,5 @@ namespace CinemaApp.Models
         public DateTime Time { get; set; }
         public CinemaRoom CinemaRoom { get; set; }
         public Movie Movie { get; set; }
-
-       
     }
 }
