@@ -86,7 +86,7 @@ namespace CinemaApp.API
 
         // DELETE: api/TimeSlots/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<TimeSlot>> DeleteTimeSlot(int id)
+        public async Task<ActionResult<TimeSlotDTO>> DeleteTimeSlot(int id)
         {
             var timeSlot = await _context.TimeSlots.FindAsync(id);
             if (timeSlot == null)
@@ -97,7 +97,7 @@ namespace CinemaApp.API
             _context.TimeSlots.Remove(timeSlot);
             await _context.SaveChangesAsync();
 
-            return timeSlot;
+            return NoContent();
         }
 
         private bool TimeSlotExists(int id)

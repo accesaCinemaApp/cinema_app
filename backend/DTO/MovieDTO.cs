@@ -1,6 +1,7 @@
 ﻿using CinemaApp.Models;
+using CinemaApp.Utilities;
 using System;
-using System.Reflection;
+using System.Text.Json.Serialization;
 
 namespace CinemaApp.DTO
 {
@@ -11,7 +12,10 @@ namespace CinemaApp.DTO
         public string Description { get; set; }
         public DateTime ReleasedDate { get; set; }
         public float Rating { get; set; }
+        [JsonConverter(typeof(TimeSpanConverter))]
         public TimeSpan Duration { get; set; }
+
+        public MovieDTO() { }
 
         public MovieDTO(Movie movie)
         {

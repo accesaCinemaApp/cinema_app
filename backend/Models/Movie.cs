@@ -1,4 +1,6 @@
-﻿using System;
+﻿using CinemaApp.Utilities;
+using System;
+using System.Text.Json.Serialization;
 
 namespace CinemaApp.Models
 {
@@ -9,6 +11,7 @@ namespace CinemaApp.Models
         public string Description { get; set; }
         public DateTime ReleasedDate { get; set; }
         public float Rating { get; set; }
+        [JsonConverter(typeof(TimeSpanConverter))]
         public TimeSpan Duration { get; set; }
         public Movie()
         { }

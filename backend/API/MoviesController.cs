@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CinemaApp.Models;
 using CinemaApp.DTO;
+using System.Text.Json;
 
 namespace CinemaApp.API
 {
@@ -74,7 +75,7 @@ namespace CinemaApp.API
 
         // DELETE: api/Movie/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Movie>> DeleteMovie(int id)
+        public async Task<ActionResult<MovieDTO>> DeleteMovie(int id)
         {
             var movie = await _context.Movies.FindAsync(id);
             if (movie == null)
@@ -85,7 +86,7 @@ namespace CinemaApp.API
             _context.Movies.Remove(movie);
             await _context.SaveChangesAsync();
 
-            return movie;
+            return NoContent();
         }
 
         private bool MovieExists(int id)
