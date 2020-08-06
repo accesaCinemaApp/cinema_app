@@ -12,6 +12,7 @@ namespace CinemaApp.Models
         public CinemaDbContext() 
             : base() 
         {
+            
         }
 
         public CinemaDbContext(DbContextOptions<CinemaDbContext> options)
@@ -23,5 +24,6 @@ namespace CinemaApp.Models
         public DbSet<Movie> Movies { get; set; }
         public DbSet<TimeSlot> TimeSlots { get; set; }
         public DbSet<Booking> Bookings { get; set; }
+
     }
 }

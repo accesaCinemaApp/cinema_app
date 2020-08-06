@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CinemaApp.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,6 +15,7 @@ namespace CinemaApp.DTO
         public DateTime ReleasedDate { get; set; }
         public float Rating { get; set; }
         public TimeSpan Duration { get; set; }
+        public byte[] CoverPhoto { get; set; }
 
     }
 }
