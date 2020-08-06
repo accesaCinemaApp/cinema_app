@@ -15,6 +15,8 @@ namespace CinemaApp.DTO
             return other != null && Row == other.Row && Nr == other.Nr;
         }
 
+        public SeatDTO() { }
+
         public SeatDTO(Seat seat)
         {
             ID = seat.ID;

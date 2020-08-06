@@ -38,6 +38,27 @@ namespace CinemaApp.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Seat",
+                columns: table => new
+                {
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Row = table.Column<string>(nullable: false),
+                    Nr = table.Column<int>(nullable: false),
+                    CinemaRoomID = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Seat", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_Seat_CinemaRooms_CinemaRoomID",
+                        column: x => x.CinemaRoomID,
+                        principalTable: "CinemaRooms",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "TimeSlots",
                 columns: table => new
                 {
@@ -85,42 +106,45 @@ namespace CinemaApp.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Seat",
+                name: "BookedSeat",
                 columns: table => new
                 {
                     ID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Row = table.Column<string>(nullable: false),
-                    Nr = table.Column<int>(nullable: false),
-                    BookingID = table.Column<int>(nullable: true),
-                    CinemaRoomID = table.Column<int>(nullable: true)
+                    SeatID = table.Column<int>(nullable: true),
+                    BookingID = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Seat", x => x.ID);
+                    table.PrimaryKey("PK_BookedSeat", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_Seat_Bookings_BookingID",
+                        name: "FK_BookedSeat_Bookings_BookingID",
                         column: x => x.BookingID,
                         principalTable: "Bookings",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Seat_CinemaRooms_CinemaRoomID",
-                        column: x => x.CinemaRoomID,
-                        principalTable: "CinemaRooms",
+                        name: "FK_BookedSeat_Seat_SeatID",
+                        column: x => x.SeatID,
+                        principalTable: "Seat",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_BookedSeat_BookingID",
+                table: "BookedSeat",
+                column: "BookingID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BookedSeat_SeatID",
+                table: "BookedSeat",
+                column: "SeatID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Bookings_TimeSlotID",
                 table: "Bookings",
                 column: "TimeSlotID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Seat_BookingID",
-                table: "Seat",
-                column: "BookingID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Seat_CinemaRoomID",
@@ -141,10 +165,13 @@ namespace CinemaApp.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Seat");
+                name: "BookedSeat");
 
             migrationBuilder.DropTable(
                 name: "Bookings");
+
+            migrationBuilder.DropTable(
+                name: "Seat");
 
             migrationBuilder.DropTable(
                 name: "TimeSlots");

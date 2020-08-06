@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using CinemaApp.Models;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace CinemaApp.Controllers
 {
@@ -11,8 +6,7 @@ namespace CinemaApp.Controllers
     {
         public IActionResult Index()
         {
-            var cinemaRooms = new CinemaDbContext().CinemaRooms;
-            return View("Index", cinemaRooms);
+            return View();
         }
 
         public IActionResult Create()

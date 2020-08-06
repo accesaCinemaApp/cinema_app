@@ -10,6 +10,7 @@ namespace CinemaApp.DTO
         public CinemaRoomDTO CinemaRoom { get; set; }
         public MovieDTO Movie { get; set; }
 
+        public TimeSlotDTO() { }
         public TimeSlotDTO(TimeSlot timeSlot)
         {
             ID = timeSlot.ID;

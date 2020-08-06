@@ -19,6 +19,28 @@ namespace CinemaApp.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("CinemaApp.Models.BookedSeat", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("BookingID")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("SeatID")
+                        .HasColumnType("int");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("BookingID");
+
+                    b.HasIndex("SeatID");
+
+                    b.ToTable("BookedSeat");
+                });
+
             modelBuilder.Entity("CinemaApp.Models.Booking", b =>
                 {
                     b.Property<int>("ID")
@@ -88,9 +110,6 @@ namespace CinemaApp.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("BookingID")
-                        .HasColumnType("int");
-
                     b.Property<int?>("CinemaRoomID")
                         .HasColumnType("int");
 
@@ -102,8 +121,6 @@ namespace CinemaApp.Migrations
                         .HasColumnType("nvarchar(1)");
 
                     b.HasKey("ID");
-
-                    b.HasIndex("BookingID");
 
                     b.HasIndex("CinemaRoomID");
 
@@ -135,6 +152,17 @@ namespace CinemaApp.Migrations
                     b.ToTable("TimeSlots");
                 });
 
+            modelBuilder.Entity("CinemaApp.Models.BookedSeat", b =>
+                {
+                    b.HasOne("CinemaApp.Models.Booking", "Booking")
+                        .WithMany("BookedSeats")
+                        .HasForeignKey("BookingID");
+
+                    b.HasOne("CinemaApp.Models.Seat", "Seat")
+                        .WithMany()
+                        .HasForeignKey("SeatID");
+                });
+
             modelBuilder.Entity("CinemaApp.Models.Booking", b =>
                 {
                     b.HasOne("CinemaApp.Models.TimeSlot", "TimeSlot")
@@ -144,10 +172,6 @@ namespace CinemaApp.Migrations
 
             modelBuilder.Entity("CinemaApp.Models.Seat", b =>
                 {
-                    b.HasOne("CinemaApp.Models.Booking", null)
-                        .WithMany("Seats")
-                        .HasForeignKey("BookingID");
-
                     b.HasOne("CinemaApp.Models.CinemaRoom", null)
                         .WithMany("Seats")
                         .HasForeignKey("CinemaRoomID");

@@ -23,14 +23,14 @@ namespace CinemaApp.API
         [HttpGet]
         public async Task<ActionResult<IEnumerable<BookingDTO>>> GetBookings()
         {
-            return await _context.Bookings.Select(booking => ItemToDTO(booking)).ToListAsync();
+            return await _context.Bookings.Include(booking => booking.BookedSeats).Select(booking => ItemToDTO(booking)).ToListAsync();
         }
 
         // GET: api/Bookings/5
         [HttpGet("{id}")]
         public async Task<ActionResult<BookingDTO>> GetBooking(int id)
         {
-            var booking = await _context.Bookings.FindAsync(id);
+            var booking = await _context.Bookings.Include(booking => booking.BookedSeats).SingleOrDefaultAsync(booking => booking.ID == id);
 
             if (booking == null)
             {
@@ -54,7 +54,7 @@ namespace CinemaApp.API
                 return NotFound();
             }
             _context.Entry(booking).State = EntityState.Modified;
-            if ((booking.Seats.Equals(null)))
+            if ((booking.BookedSeats.Equals(null)))
             {
                 _context.Entry(booking).Property("Seats").IsModified = false;
             }

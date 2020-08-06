@@ -22,16 +22,16 @@ namespace CinemaApp.API
 
         // GET: api/<CinemaRoomsController>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CinemaRoomDTO>>> GetCinemaRoom()
+        public async Task<ActionResult<IEnumerable<CinemaRoomDTO>>> GetCinemaRooms()
         {
-            return await _context.CinemaRooms.Select(cinemaRoom => ItemToDTO(cinemaRoom)).ToListAsync();
+            return await _context.CinemaRooms.Include(cinemaRoom => cinemaRoom.Seats).Select(cinemaRoom => ItemToDTO(cinemaRoom)).ToListAsync();
         }
 
         // GET api/<CinemaRoomsController>/5
         [HttpGet("{id}")]
         public async Task<ActionResult<CinemaRoomDTO>> GetCinemaRoom(int id)
         {
-            var cinemaRoom = await _context.CinemaRooms.FindAsync(id);
+            var cinemaRoom = await _context.CinemaRooms.Include(cinemaRoom => cinemaRoom.Seats).SingleOrDefaultAsync(cinemaRoom => cinemaRoom.ID == id);
 
             if (cinemaRoom == null)
             {
@@ -45,7 +45,7 @@ namespace CinemaApp.API
         [HttpPost]
         public async Task<ActionResult<CinemaRoomDTO>> PostCinemaRoom(CinemaRoomDTO cinemaRoom)
         {
-            await _context.CinemaRooms.AddAsync(cinemaRoom.DTOToModel());
+            _context.CinemaRooms.Add(cinemaRoom.DTOToModel());
             await _context.SaveChangesAsync();
 
             return CreatedAtAction(nameof(GetCinemaRoom), new { id = cinemaRoom.ID }, cinemaRoom);

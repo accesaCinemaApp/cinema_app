@@ -10,6 +10,8 @@ namespace CinemaApp.DTO
         public int RoomNr { get; set; }
         public List<SeatDTO> Seats { get; set; }
 
+        public CinemaRoomDTO() { }
+
         public CinemaRoomDTO(CinemaRoom cinemaRoom)
         {
             ID = cinemaRoom.ID;
