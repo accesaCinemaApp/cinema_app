@@ -1,12 +1,3 @@
-<<<<<<< HEAD
-.example-card {
-    max-width: 400px;
-  }
-  
-  .example-header-image {
-    background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
-    background-size: cover;
-=======
 .movie-card {
     max-width: 650px;
     margin:20px;
@@ -59,5 +50,4 @@
    margin:auto;
    text-align: center !important;
    justify-items: center !important;
->>>>>>> f4d2c61... Added service, pages, navigation
   }
