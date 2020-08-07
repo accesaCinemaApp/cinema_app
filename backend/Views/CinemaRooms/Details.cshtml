@@ -1,0 +1,69 @@
+﻿<div class="container">
+    <h1 class="display-4 text-center">Details</h1>
+
+    <h5>ID: <span id="id"></span></h5>
+    <h5>RoomNr: <span id="roomNr"></span></h5>
+    <h5>Seats:</h5>
+    <table class="table table-striped table-hover table-responsive">
+        <thead class="thead-dark">
+            <tr>
+                <th>Seat ID</th>
+                <th>Row</th>
+                <th>Column</th>
+            </tr>
+        </thead>
+        <tbody id="table-body"></tbody>
+    </table>
+    <hr class="clearfix" />
+    <a class="text-warning" href="/CinemaRooms/Edit/@ViewData["roomID"]">Edit this Cinema Room</a>
+    <a class="text-danger" href="/CinemaRooms/Delete/@ViewData["roomID"]">Delete this Cinema Room</a>
+</div>
+
+<script>
+    const cinemaRoomID = @ViewData["roomID"];
+    const tableBody = document.getElementById('table-body');
+    const id = document.getElementById('id');
+    const roomNr = document.getElementById('roomNr');
+    (() => {
+        fetch(`/api/CinemaRooms/${cinemaRoomID}`)
+            .then(resp => resp.json())
+            .then(resp => {
+                id.textContent = resp.id;
+                roomNr.textContent = resp.roomNr;
+
+                // seat list is empty
+                if (resp.seats.length == 0) {
+                    let row = document.createElement('tr');
+                    let column = document.createElement('td');
+                    column.colSpan = 3;
+                    column.className = 'text-center';
+                    column.textContent = 'No seats to show.';
+                    row.appendChild(column);
+                    tableBody.appendChild(row);
+                } else {
+                    resp.seats.forEach(elem => {
+                        let row = document.createElement('tr');
+                        let columnID = document.createElement('td');
+                        let columnRow = document.createElement('td');
+                        let columnNr = document.createElement('td');
+                        columnID.textContent = elem.id;
+                        columnRow.textContent = elem.row;
+                        columnNr.textContent = elem.nr;
+                        row.appendChild(columnID);
+                        row.appendChild(columnRow);
+                        row.appendChild(columnNr);
+                        tableBody.appendChild(row);
+                    });
+                }
+            })
+            .catch(resp => {
+                let row = document.createElement('tr');
+                let column = document.createElement('td');
+                column.colSpan = 3;
+                column.className = 'text-center text-danger';
+                column.textContent = resp.body;
+                row.appendChild(column);
+                tableBody.appendChild(row);
+            });
+    })();
+</script>

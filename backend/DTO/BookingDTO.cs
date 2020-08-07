@@ -1,8 +1,6 @@
-﻿using System;
+﻿using CinemaApp.Models;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using CinemaApp.Models;
 
 namespace CinemaApp.DTO
 {
@@ -10,10 +8,28 @@ namespace CinemaApp.DTO
     {
         public int ID { get; set; }
         public string Email { get; set; }
-
         public TimeSlotDTO TimeSlot { get; set; }
+        public List<BookedSeatDTO> BookedSeats { get; set; }
 
-        public List<SeatDTO> Seats { get; set; }
+        public BookingDTO() { }
 
+        public BookingDTO(Booking booking)
+        {
+            ID = booking.ID;
+            Email = booking.Email;
+            TimeSlot = new TimeSlotDTO(booking.TimeSlot);
+            BookedSeats = booking.BookedSeats.Select(bookedSeat => new BookedSeatDTO(bookedSeat)).ToList();
+        }
+
+        public Booking DTOToModel()
+        {
+            return new Booking
+            {
+                ID = ID,
+                Email = Email,
+                TimeSlot = TimeSlot.DTOToModel(),
+                BookedSeats = BookedSeats.Select(bookedSeat => bookedSeat.DTOToModel()).ToList()
+            };
+        }
     }
 }

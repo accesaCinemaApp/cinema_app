@@ -8,5 +8,10 @@ namespace CinemaApp.Models
         public int ID { get; set; }
         public int RoomNr { get; set; }
         public List<Seat> Seats { get; set; }
+
+        public CinemaRoom()
+        {
+            Seats = new List<Seat>();
+        }
     }
 }

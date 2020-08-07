@@ -1,0 +1,99 @@
+﻿<div class="container">
+    <h1 class="display-4 text-center">Create new Cinema Room</h1>
+
+    <form id="create-form">
+        <p>RoomNr: <input type="number" name="roomNr" class="form-control" min="1" max="100" value="1" /></p>
+
+        <button type="button" class="btn btn-outline-info" onclick="addSeat()">Add new Seat</button>
+        <table class="table table-striped table-hover table-responsive">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Row</th>
+                    <th>Nr</th>
+                </tr>
+            </thead>
+            <tbody id="table-body"></tbody>
+        </table>
+        <button type="button" class="btn btn-outline-warning" onclick="removeSeat()">Remove last Seat</button>
+
+        <hr class="clearfix" />
+        <button type="button" class="btn btn-outline-success" onclick="submitForm()">Update Cinema Room!</button>
+    </form>
+</div>
+
+<script>
+    const cinemaRoomID = @ViewData["roomID"];
+    const tableBody = document.getElementById('table-body');
+    const roomNr = document.getElementsByName('roomNr')[0];
+    let seats = 0;
+
+    (() => {
+        fetch(`/api/CinemaRooms/${cinemaRoomID}`)
+            .then(resp => resp.json())
+            .then(resp => {
+                roomNr.value = resp.roomNr;
+                resp.seats.forEach(elem => {
+                    addSeat();
+                    document.getElementsByName(`seat-row-${seats}`)[0].value = elem.row;
+                    document.getElementsByName(`seat-nr-${seats}`)[0].value = elem.nr;
+                });
+            });
+    })();
+
+    const removeSeat = () => {
+        tableBody.removeChild(document.getElementById(`seat-${seats}`));
+        seats -= 1;
+    }
+
+    const addSeat = () => {
+        seats += 1;
+        let row = document.createElement('tr');
+        row.id = `seat-${seats}`;
+
+        let seatRowInput = document.createElement('input');
+        seatRowInput.type = 'text';
+        seatRowInput.maxLength = 1;
+        seatRowInput.name = `seat-row-${seats}`;
+        seatRowInput.className = 'form-control';
+        let seatNrInput = document.createElement('input');
+        seatNrInput.type = 'number';
+        seatNrInput.name = `seat-nr-${seats}`;
+        seatNrInput.className = 'form-control';
+
+        let seatRow = document.createElement('td');
+        seatRow.appendChild(seatRowInput);
+        let seatNr = document.createElement('td');
+        seatNr.appendChild(seatNrInput);
+        row.appendChild(seatRow);
+        row.appendChild(seatNr);
+        tableBody.appendChild(row);
+    }
+
+    const submitForm = () => {
+        const roomNr = parseInt(document.getElementsByName('roomNr')[0].value);
+        let seatList = [];
+        for (let i = 1; i <= seats; i += 1) {
+            seatList = [...seatList,
+                {
+                    Row: document.getElementsByName(`seat-row-${i}`)[0].value,
+                    Nr: parseInt(document.getElementsByName(`seat-nr-${i}`)[0].value)
+                }];
+        }
+        const cinemaRoomObj = {
+            RoomNr: roomNr,
+            Seats: seatList
+        };
+
+        console.log(cinemaRoomObj);
+        fetch(`/api/CinemaRooms/${cinemaRoomID}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: cinemaRoomObj
+        })
+            .then(resp => resp.json())
+            .then(resp => { console.log(resp) });
+    }
+
+</script>

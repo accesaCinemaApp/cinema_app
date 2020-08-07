@@ -1,5 +1,4 @@
 ﻿using CinemaApp.Models;
-using System;
 
 namespace CinemaApp.DTO
 {
@@ -16,6 +15,23 @@ namespace CinemaApp.DTO
             return other != null && Row == other.Row && Nr == other.Nr;
         }
 
-        
+        public SeatDTO() { }
+
+        public SeatDTO(Seat seat)
+        {
+            ID = seat.ID;
+            Row = seat.Row;
+            Nr = seat.Nr;
+        }
+
+        public Seat DTOToModel()
+        {
+            return new Seat
+            {
+                ID = ID,
+                Row = Row,
+                Nr = Nr
+            };
+        }
     }
 }

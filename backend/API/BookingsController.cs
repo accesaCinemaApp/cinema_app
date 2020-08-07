@@ -6,15 +6,15 @@ using CinemaApp.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace CinemaApp.Controllers
+namespace CinemaApp.API
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BookingController : ControllerBase
+    public class BookingsController : ControllerBase
     {
-        private readonly CinemaContext _context;
+        private readonly CinemaDbContext _context;
 
-        public BookingController(CinemaContext context)
+        public BookingsController(CinemaDbContext context)
         {
             _context = context;
         }
@@ -30,7 +30,7 @@ namespace CinemaApp.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<BookingDTO>> GetBooking(int id)
         {
-            var booking = await _context.Bookings.FindAsync(id);
+            var booking = await _context.Bookings.Include(booking => booking.BookedSeats).SingleOrDefaultAsync(booking => booking.ID == id);
 
             if (booking == null)
             {
@@ -54,7 +54,7 @@ namespace CinemaApp.Controllers
                 return NotFound();
             }
             _context.Entry(booking).State = EntityState.Modified;
-            if ((booking.Seats.Equals(null)))
+            if ((booking.BookedSeats.Equals(null)))
             {
                 _context.Entry(booking).Property("Seats").IsModified = false;
             }
@@ -71,15 +71,9 @@ namespace CinemaApp.Controllers
         [HttpPost]
         public async Task<ActionResult<Booking>> PostBooking(BookingDTO booking)
         {
-            var seats = booking.Seats.Select(seat => new Seat { ID = seat.ID, Nr = seat.Nr, Row = seat.Row }).ToList();
-            var timeSlotDTO = new TimeSlot
-            {
-                ID = booking.TimeSlot.ID, Time = booking.TimeSlot.Time, CinemaRoom = booking.TimeSlot.CinemaRoom,
-                Movie = booking.TimeSlot.Movie
-            };
-            await _context.Bookings.AddAsync(new Booking
-            {Email = booking.Email, Seats = seats, TimeSlot = timeSlotDTO});
+            await _context.Bookings.AddAsync(booking.DTOToModel());
             await _context.SaveChangesAsync();
+
             return CreatedAtAction(nameof(GetBooking), new { id = booking.ID }, booking);
         }
 
@@ -104,17 +98,6 @@ namespace CinemaApp.Controllers
             return _context.Bookings.Any(e => e.ID == id);
         }
 
-        private static BookingDTO ItemToDTO(Booking booking)
-        {
-            var seatDTOs= booking.Seats.Select(seat =>  new SeatDTO { ID = seat.ID, Nr = seat.Nr, Row = seat.Row }).ToList();
-            var timeSlotDTO= new TimeSlotDTO { ID = booking.TimeSlot.ID, Time = booking.TimeSlot.Time, CinemaRoom = booking.TimeSlot.CinemaRoom, Movie = booking.TimeSlot.Movie };
-            return new BookingDTO
-            {
-                Email = booking.Email,
-                ID = booking.ID,
-                Seats = seatDTOs,
-                TimeSlot = timeSlotDTO
-            };
-        }
+        private static BookingDTO ItemToDTO(Booking booking) => new BookingDTO(booking);
     }
 }

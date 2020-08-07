@@ -354,4 +354,3 @@ MigrationBackup/
 # wwwroot libraries
 backend/wwwroot/lib/
 backend/wwwroot/dist/
-/backend/Controllers/BookingConfirmationController.cs

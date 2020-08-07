@@ -1,5 +1,4 @@
 ﻿using System;
-using CinemaApp.DTO;
 
 namespace CinemaApp.Models
 {
@@ -15,6 +14,5 @@ namespace CinemaApp.Models
         {
             return other != null && Row == other.Row && Nr == other.Nr;
         }
-        
     };
 }

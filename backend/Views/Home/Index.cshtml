@@ -1,8 +1,25 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Admin Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+    <div class='container-fluid'>
+        <div class='jumbotron jumbotron-fluid'>
+            <div class='container'>
+                <h1 class='display-4'>Admin Home page</h1>
+                <p class='lead'>Welcome to the admin page. See the navigation links below to start managing your page.</p>
+            </div>
+        </div>
+
+        <div class='row'>
+            <div class='col-md-3 col-sm-6 col-xs-12'>
+                <h3>Navigation</h3>
+                <div class='nav flex-column nav-pills'>
+                    <a href='#' class='nav-link active' data-toggle='tooltip' data-placement='right' title='Home page for navigation'>Home</a>
+                    <a asp-controller='CinemaRooms' asp-action='Index' class='nav-link' data-toggle='tooltip' data-placement='right' title='Add, edit or delete existing cinema rooms'>Cinema Rooms</a>
+                    <a asp-controller='Movies' asp-action='Index' class='nav-link' data-toggle='tooltip' data-placement='right' title='Add, edit or delete existing movies'>Movies</a>
+                    <a href='#' class='nav-link' data-toggle='tooltip' data-placement='right' title='Add, edit or delete existing calendar events'>Calendar</a>
+                    <a asp-controller='Bookings' asp-action='Create' class='nav-link' data-toggle='tooltip' data-placement='right' title='Add, edit or delete existing bookings manually'>Bookings</a>
+                </div>
+            </div>
+        </div>
+    </div>
