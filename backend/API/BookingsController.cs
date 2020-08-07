@@ -23,7 +23,7 @@ namespace CinemaApp.API
         [HttpGet]
         public async Task<ActionResult<IEnumerable<BookingDTO>>> GetBookings()
         {
-            return await _context.Bookings.Include(booking => booking.BookedSeats).Select(booking => ItemToDTO(booking)).ToListAsync();
+            return await _context.Bookings.Select(booking => ItemToDTO(booking)).ToListAsync();
         }
 
         // GET: api/Bookings/5

@@ -55,7 +55,7 @@ namespace CinemaApp.Migrations
                         column: x => x.CinemaRoomID,
                         principalTable: "CinemaRooms",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -76,13 +76,13 @@ namespace CinemaApp.Migrations
                         column: x => x.CinemaRoomID,
                         principalTable: "CinemaRooms",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_TimeSlots_Movies_MovieID",
                         column: x => x.MovieID,
                         principalTable: "Movies",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -102,7 +102,7 @@ namespace CinemaApp.Migrations
                         column: x => x.TimeSlotID,
                         principalTable: "TimeSlots",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -122,7 +122,7 @@ namespace CinemaApp.Migrations
                         column: x => x.BookingID,
                         principalTable: "Bookings",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_BookedSeat_Seat_SeatID",
                         column: x => x.SeatID,

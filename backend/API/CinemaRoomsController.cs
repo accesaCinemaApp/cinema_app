@@ -24,7 +24,7 @@ namespace CinemaApp.API
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CinemaRoomDTO>>> GetCinemaRooms()
         {
-            return await _context.CinemaRooms.Include(cinemaRoom => cinemaRoom.Seats).Select(cinemaRoom => ItemToDTO(cinemaRoom)).ToListAsync();
+            return await _context.CinemaRooms.Select(cinemaRoom => ItemToDTO(cinemaRoom)).ToListAsync();
         }
 
         // GET api/<CinemaRoomsController>/5

@@ -9,18 +9,30 @@ namespace CinemaApp.Controllers
             return View();
         }
 
+        [Route("CinemaRooms/Details/{roomID:int}")]
+        public IActionResult Details(int roomID)
+        {
+            ViewData["roomID"] = roomID;
+            return View();
+        }
+
+
         public IActionResult Create()
         {
             return View();
         }
 
-        public IActionResult Edit()
+        [Route("CinemaRooms/Edit/{roomID:int}")]
+        public IActionResult Edit(int roomID)
         {
+            ViewData["roomID"] = roomID;
             return View();
         }
 
-        public IActionResult Delete()
+        [Route("CinemaRooms/Delete/{roomID:int}")]
+        public IActionResult Delete(int roomID)
         {
+            ViewData["roomID"] = roomID;
             return View();
         }
     }
