@@ -7,7 +7,7 @@ import { Movie } from '../movie';
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
-  providers: [MovieService,MovieComponent],
+  providers: [MovieService],
 })
 export class HomeComponent implements OnInit {
   movies: Movie[];
