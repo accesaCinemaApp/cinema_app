@@ -1,0 +1,45 @@
+
+@model CinemaApp.Models.DatesModel
+
+
+@functions
+{
+    public double difference(DateTime date)
+    {
+    <p>@Model.Date  </p>
+        return ((date.AddHours(1).AddMinutes(33) - date).TotalHours);
+    }
+}
+@difference(@Model.Date)  hour difference
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="/css/style.css"/>
+   
+</head>
+<body>
+
+    <p>Hello there</p>
+
+
+    @using (Html.BeginForm("SeeMovies", "CalendarUi", FormMethod.Post))
+    {
+        <input id="input"  type="text" data-dd-theme="leaf" value="Pick a date">
+        <div id="result"></div>
+        <input id="checkMovies" type="submit" value="Check the day">
+
+    }
+
+    <script src="/js/jquery-3.5.1.min.js"></script>
+    <script src="/js/datedropper.pro.min.js"></script>
+    <script>
+        $("#input").dateDropper().onCreate;
+    </script>
+    
+
+
+</body>
+</html>

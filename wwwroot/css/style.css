@@ -1,0 +1,23 @@
+
+#input {
+    padding: 30px;
+    margin-top: 50px;
+    border-color: #1ecd80;
+    border-width: 15px;
+    background-color: #fefff2;
+}
+
+input{
+    color: #1ecd80;
+    font-weight: bold;
+    text-align: center;
+    
+}
+#checkMovies {
+    padding: 25px;
+    color: #1ecd80;
+    border-color: #1ecd80;
+    border-width: 10px;
+    background-color: #fefff2;
+}
+
