@@ -1,0 +1,44 @@
+﻿<div class="container">
+    <h1 class="display-4 text-center">Delete Confirmation</h1>
+
+    <h4>Are you sure you want to delete this Cinema Room?</h4>
+    <hr class="clearfix" />
+
+    <h5>ID: <span id="id"></span></h5>
+    <h5>RoomNr: <span id="roomNr"></span></h5>
+    <h5>Nr of Seats: <span id="seatCount"></span></h5>
+
+    <p id="message"></p>
+
+    <button class="btn btn-outline-danger" onclick="confirmDelete()">Delete</button>
+</div>
+
+<script>
+    const cinemaRoomID = @ViewData["roomID"];
+    const id = document.getElementById('id');
+    const roomNr = document.getElementById('roomNr');
+    const seatCount = document.getElementById('seatCount');
+    const message = document.getElementById('message');
+    (() => {
+        fetch(`/api/CinemaRooms/${cinemaRoomID}`)
+            .then(resp => resp.json())
+            .then(resp => {
+                id.textContent = resp.id;
+                roomNr.textContent = resp.roomNr;
+                seatCount.textContent = resp.seats.length;
+            })
+            .catch(resp => {
+                message.className = 'text-danger';
+                message.textContent = resp;
+            });
+    })();
+
+    const confirmDelete = () => {
+        fetch(`/api/CinemaRooms/${cinemaRoomID}`, {
+            method: 'DELETE'
+        })
+            .then(_resp => {
+                window.location.href = '/CinemaRooms/';
+            });
+    }
+</script>
