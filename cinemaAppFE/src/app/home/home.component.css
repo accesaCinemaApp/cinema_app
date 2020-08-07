@@ -16,3 +16,13 @@ display:block;
     display:flex;
     flex-direction: row;
 }
+
+.movies-wrapper{
+    display: flex;
+    flex-direction: row;
+    flex-grow: 1;
+    flex-wrap: wrap;
+    align-content: center;
+    justify-content: center;
+    text-align: center;
+    }
