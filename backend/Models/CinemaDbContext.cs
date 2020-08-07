@@ -6,7 +6,6 @@ namespace CinemaApp.Models
     public class CinemaDbContext : DbContext
     {
         public CinemaDbContext()
-            : base() 
         {
         }
 

@@ -16,7 +16,5 @@ namespace CinemaApp.Models
         public TimeSpan Duration { get; set; }
         [NotMapped]
         public byte[] CoverPhoto { get; set; }
-        public Movie()
-        { }
     }
 }

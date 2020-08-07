@@ -21,7 +21,7 @@ namespace CinemaApp.DTO
 
         public TimeSlot DTOToModel()
         {
-            return new TimeSlot()
+            return new TimeSlot
             {
                 ID = ID,
                 Time = Time,
