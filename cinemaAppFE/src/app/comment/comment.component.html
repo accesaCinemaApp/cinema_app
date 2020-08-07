@@ -1,0 +1,19 @@
+
+
+<div id='container'>
+    
+    <div class='form'>
+        <h3>Leave the comment here</h3>
+        <input type="text" [(ngModel)]="formName" placeholder="Name" id="name"/><br/><br/>
+        <input type="date" [(ngModel)]="formDate"  id="date"/><br/><br/>
+        <textarea type="text" [(ngModel)]="formBody" placeholder="Your comment" id="bodyText"></textarea><br/><br/>
+        <button (click)="addComment()" id="addComment" >Post</button>
+  
+    </div>
+    <div *ngFor="let data of comments" class="comList">
+        <p  > {{data.name}} </p>
+        <p> {{data.date}}</p>
+        <p>{{data.body}}</p>
+    </div>
+
+</div>

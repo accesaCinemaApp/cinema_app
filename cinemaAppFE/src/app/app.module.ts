@@ -8,6 +8,8 @@ import { TodayInCinemaComponent } from './today-in-cinema/today-in-cinema.compon
 import { HttpClientModule } from '@angular/common/http';
 import { MovieComponent } from './movie/movie.component';
 import { MatCardModule } from '@angular/material/card';
+import { CommentComponent } from './comment/comment.component';
+import {FormsModule} from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -15,13 +17,15 @@ import { MatCardModule } from '@angular/material/card';
     HomeComponent,
     ProgramComponent,
     TodayInCinemaComponent,
-    MovieComponent
+    MovieComponent,
+    CommentComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    MatCardModule
+    MatCardModule,
+    FormsModule
   ],
   exports :[ MatCardModule 
   ],

@@ -1,0 +1,97 @@
+#container{
+border: 0.5px dashed grey;
+width:50%;
+margin-left:30%;
+/*background: linear-gradient(0deg, rgba(34,193,195,1) 0%, rgba(45,106,253,1) 100%);*/
+padding-left:5%;
+box-shadow: 3px 4px 0px 0px #899599;
+	background:linear-gradient(to bottom, #ededed 5%, #bab1ba 100%);
+	background-color:#ededed;
+	border-radius:15px;
+	border:1px solid #d6bcd6;
+	display:inline-block;
+	cursor:pointer;
+	color:#3a8a9e;
+	font-family:Arial;
+	font-size:17px;
+	padding:7px 25px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #e1e2ed;
+}
+.commentBox{
+    width:50%;
+    padding:1%;
+    margin-bottom:10px;
+    
+}
+.leftPanelImg{
+    width:10%;
+    float:left;
+}
+.leftPanelImg img{
+    border-radius:100%;
+}
+.rightPanel{
+    width:50%;
+    float:left;
+    margin-left:1%;
+}
+.clear{
+    clear:both; /*pentru a face ca right and left panel sa fie cuprinse in boxul: commentBox*/
+}
+.form{
+    padding:10px;
+    border:1ps solid red;
+    margin-bottom:10px;
+    text-align: center;
+}
+.form h3{
+    text-align: center;
+}
+.form input[type="text"], .form textarea, .form input[type="date"]{
+padding: 2px;
+width:300px;
+box-shadow: 3px 4px 0px 0px #34648f;
+	background:linear-gradient(to bottom, #79bbff 5%, #88b1db 100%);
+	background-color:#79bbff;
+	border-radius:5px;
+	border:1px solid #1578db;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:Arial;
+	font-size:17px;
+	font-weight:bold;
+	padding:12px 44px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #4d92d6;
+}
+#addComment{
+    box-shadow: 3px 4px 0px 0px #1564ad;
+	background:linear-gradient(to bottom, #79bbff 5%, #378de5 100%);
+	background-color:#79bbff;
+	border-radius:5px;
+	border:1px solid #337bc4;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:Arial;
+	font-size:17px;
+	font-weight:bold;
+	padding:12px 44px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #528ecc;
+}
+#addComment:hover {
+	background:linear-gradient(to bottom, #378de5 5%, #79bbff 100%);
+	background-color:#dc41ea;
+}
+#addComment{
+	position:relative;
+	top:1px;
+}
+.comList{
+	border:1px solid grey;
+	font-style: italic;
+	
+}
