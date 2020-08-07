@@ -90,3 +90,8 @@ box-shadow: 3px 4px 0px 0px #34648f;
 	position:relative;
 	top:1px;
 }
+.comList{
+	border:1px solid grey;
+	font-style: italic;
+	
+}
