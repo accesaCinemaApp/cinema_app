@@ -78,7 +78,7 @@ namespace CinemaApp.API
 
         // DELETE api/<CinemaRoomsController>/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<CinemaRoomDTO>> Delete(int id)
+        public async Task<ActionResult<CinemaRoomDTO>> DeleteCinemaRoom(int id)
         {
             var cinemaRoom = await _context.CinemaRooms.FindAsync(id);
             if (cinemaRoom == null)

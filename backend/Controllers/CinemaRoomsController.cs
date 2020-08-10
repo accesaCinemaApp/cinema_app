@@ -1,39 +1,101 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using CinemaApp.Models;
 
 namespace CinemaApp.Controllers
 {
     public class CinemaRoomsController : Controller
     {
-        public IActionResult Index()
+        private readonly CinemaDbContext _context;
+
+        public CinemaRoomsController(CinemaDbContext context)
         {
-            return View();
+            _context = context;
         }
 
-        [Route("CinemaRooms/Details/{roomID:int}")]
-        public IActionResult Details(int roomID)
+        // GET: CinemaRooms
+        public async Task<IActionResult> Index()
         {
-            ViewData["roomID"] = roomID;
-            return View();
+            return View(await _context.CinemaRooms.ToListAsync());
         }
 
+        // GET: CinemaRooms/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
 
+            var cinemaRoom = await _context.CinemaRooms.Include(cinemaRoom => cinemaRoom.Seats)
+                .FirstOrDefaultAsync(cinemaRoom => cinemaRoom.ID == id);
+            if (cinemaRoom == null)
+            {
+                return NotFound();
+            }
+
+            return View(cinemaRoom);
+        }
+
+        // GET: CinemaRooms/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        [Route("CinemaRooms/Edit/{roomID:int}")]
-        public IActionResult Edit(int roomID)
+        // GET: CinemaRooms/Edit/5
+        public async Task<IActionResult> Edit(int? id)
         {
-            ViewData["roomID"] = roomID;
-            return View();
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var cinemaRoom = await _context.CinemaRooms.Include(cinemaRoom => cinemaRoom.Seats).FirstOrDefaultAsync(cinemaRoom => cinemaRoom.ID == id);
+            if (cinemaRoom == null)
+            {
+                return NotFound();
+            }
+
+            ViewData["roomID"] = id;
+            return View(cinemaRoom);
         }
 
-        [Route("CinemaRooms/Delete/{roomID:int}")]
-        public IActionResult Delete(int roomID)
+
+        // GET: CinemaRooms/Delete/5
+        public async Task<IActionResult> Delete(int? id)
         {
-            ViewData["roomID"] = roomID;
-            return View();
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var cinemaRoom = await _context.CinemaRooms.Include(cinemaRoom => cinemaRoom.Seats)
+                .FirstOrDefaultAsync(m => m.ID == id);
+            if (cinemaRoom == null)
+            {
+                return NotFound();
+            }
+
+            return View(cinemaRoom);
+        }
+
+        // POST: CinemaRooms/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var cinemaRoom = await _context.CinemaRooms.FindAsync(id);
+            _context.CinemaRooms.Remove(cinemaRoom);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        private bool CinemaRoomExists(int id)
+        {
+            return _context.CinemaRooms.Any(e => e.ID == id);
         }
     }
 }
