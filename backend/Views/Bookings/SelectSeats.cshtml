@@ -1,18 +1,16 @@
 ﻿@model CinemaApp.Models.BookingViewModel
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Select Seats";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
-<h1>Edit</h1>
+<h1>Create</h1>
 
 <h4>Booking</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
-            <input type="hidden" asp-for="ID" />
-
+        <form asp-action="Create">
             <div class="form-group">
                 <label asp-for="Email" class="control-label">E-mail</label>
                 <input readonly asp-for="Email" value="@Model.Email" type="email" name="email" class="form-control" />
@@ -36,9 +34,5 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Create">Back to Create Booking</a> | <a asp-action="Index">Back to list</a>
 </div>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}

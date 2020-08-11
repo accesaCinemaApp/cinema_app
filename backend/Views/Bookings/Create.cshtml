@@ -1,7 +1,8 @@
-﻿@model CinemaApp.Models.CreateBookingViewModel
+﻿@model CinemaApp.Models.BookingViewModel
 
 @{
     ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h1>Create</h1>
@@ -10,20 +11,21 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <form asp-action="SelectSeats">
             <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
+                <label asp-for="Email" class="control-label">E-mail</label>
+                <input asp-for="Email" type="email" name="email" class="form-control" />
             </div>
+
             <div class="form-group">
-                <select asp-for="MovieId" asp-items="Model.MovieList">
+                <label asp-for="TimeSlotID" class="control-label">TimeSlot</label>
+                <select asp-for="TimeSlotID" class="form-control" asp-items="@ViewData["timeSlotList"] as IEnumerable<SelectListItem>">
                     <option selected="selected" value="">Please select</option>
                 </select>
             </div>
+
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="To seat selection" class="btn btn-primary" />
             </div>
         </form>
     </div>
