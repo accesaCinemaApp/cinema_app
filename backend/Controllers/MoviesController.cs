@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CinemaApp.Models;
 
@@ -53,7 +52,7 @@ namespace CinemaApp.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Title,Description,ReleasedDate,Rating,Duration")] Movie movie)
+        public async Task<IActionResult> Create([Bind("ID,Title,Description,ReleasedDate,Rating,Duration,PhotoURL")] Movie movie)
         {
             if (ModelState.IsValid)
             {
@@ -85,7 +84,7 @@ namespace CinemaApp.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,Title,Description,ReleasedDate,Rating,Duration")] Movie movie)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,Title,Description,ReleasedDate,Rating,Duration,PhotoURL")] Movie movie)
         {
             if (id != movie.ID)
             {

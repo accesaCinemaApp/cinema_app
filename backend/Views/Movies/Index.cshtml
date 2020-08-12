@@ -28,6 +28,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Duration)
             </th>
+            <th>
+                CoverPhoto
+            </th>
             <th>Options</th>
         </tr>
     </thead>
@@ -48,6 +51,9 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Duration)
+            </td>
+            <td>
+                <img src="@Html.DisplayFor(modelItem => item.PhotoURL)" height="100" width="75" alt="Cover Photo"/>
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |

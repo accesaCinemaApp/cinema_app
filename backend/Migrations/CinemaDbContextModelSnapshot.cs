@@ -89,6 +89,9 @@ namespace CinemaApp.Migrations
                     b.Property<TimeSpan>("Duration")
                         .HasColumnType("time");
 
+                    b.Property<string>("PhotoURL")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<float>("Rating")
                         .HasColumnType("real");
 
