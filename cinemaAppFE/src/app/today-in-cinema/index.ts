@@ -1,1 +1,0 @@
-export * from './today-in-cinema.component';

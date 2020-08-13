@@ -1,0 +1,16 @@
+<div class="card mb-3 bg-dark">
+  <div class="row no-gutters">
+    <div class="col-md-4">
+      <img [src]="timeSlot.movie.photoURL" class="card-img" alt="{{timeSlot.movie.title}} cover photo">
+    </div>
+    <div class="col-md-8">
+      <div class="card-body">
+        <h5 class="card-title">{{timeSlot.movie.title}}</h5>
+        <p class="card-text">{{timeSlot.movie.description.length > 300 ? timeSlot.movie.description.substring(0, 300) + '...' : timeSlot.movie.description}}</p>
+        <p class="card-text"><small class="text-warning">{{timeSlot.movie.rating}}</small></p>
+        <p class="card-text"><button class="btn btn-outline-info">{{timeSlot.time.substring(11, 16)}}</button></p>
+      </div>
+    </div>
+  </div>
+</div>
+

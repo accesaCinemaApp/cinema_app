@@ -1,1 +1,13 @@
-<p>program works!</p>
+<h3 class="mat-display-1 text-center mb-2">Program</h3>
+<div class="btn-group max-width" (ngModelChange)="changeDate($event)" btnRadioGroup [(ngModel)]="selectedDate">
+  <label *ngFor="let item of nextTenDays" class="btn btn-dark py-2" btnRadio="{{item.value}}" tabindex="0" role="button">{{item.display}}</label>
+</div>
+
+<div class="container-fluid my-3">
+  <h4>Browsing movies on {{selectedDate}}</h4>
+  <div class="row p-0">
+    <ng-container *ngFor="let timeSlot of timeSlots; index as i">
+      <app-timeslot class="col-md-6 col-sm-12 m-0" [timeSlot]="timeSlot"></app-timeslot>
+    </ng-container>
+  </div>
+</div>
