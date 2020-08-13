@@ -1,10 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Threading.Tasks;
 using CinemaApp.DTO;
 using CinemaApp.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Cryptography;
+using System;
+using Microsoft.AspNetCore.Http.Extensions;
+using System.Data;
 
 namespace CinemaApp.API
 {
@@ -19,85 +25,107 @@ namespace CinemaApp.API
             _context = context;
         }
 
-        // GET: api/Bookings
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<BookingDTO>>> GetBookings()
-        {
-            return await _context.Bookings.Select(booking => ItemToDTO(booking)).ToListAsync();
-        }
-
-        // GET: api/Bookings/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<BookingDTO>> GetBooking(int id)
-        {
-            var booking = await _context.Bookings.Include(booking => booking.BookedSeats).SingleOrDefaultAsync(booking => booking.ID == id);
-
-            if (booking == null)
-            {
-                return NotFound();
-            }
-
-            return ItemToDTO(booking);
-        }
-
-        // PUT: api/Bookings/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutBooking(int id, BookingDTO booking)
-        {
-            if (id != booking.ID)
-            {
-                return BadRequest();
-            }
-
-            if (!BookingExists(id))
-            {
-                return NotFound();
-            }
-            _context.Entry(booking).State = EntityState.Modified;
-            if ((booking.BookedSeats.Equals(null)))
-            {
-                _context.Entry(booking).Property("Seats").IsModified = false;
-            }
-            if (booking.TimeSlot.Equals(null))
-            {
-                _context.Entry(booking).Property("TimeSlot").IsModified = false;
-            }
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
         // POST: api/Bookings
         [HttpPost]
-        public async Task<ActionResult<Booking>> PostBooking(BookingDTO booking)
+        public async Task<ActionResult<BookingDTO>> PostBooking(BookingViewModel bookingVM)
         {
-            await _context.Bookings.AddAsync(booking.DTOToModel());
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction(nameof(GetBooking), new { id = booking.ID }, booking);
-        }
-
-        // DELETE: api/Bookings/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<BookingDTO>> DeleteBooking(int id)
-        {
-            var booking = await _context.Bookings.FindAsync(id);
-            if (booking == null)
+            if(ModelState.IsValid)
             {
-                return NotFound();
+                Booking booking;
+                try
+                {
+                    booking = ModelFromVM(bookingVM);
+                }
+                catch(ArgumentException)
+                {
+                    return BadRequest();
+                }
+                catch(InvalidOperationException)
+                {
+                    return BadRequest();
+                }
+                catch (DBConcurrencyException)
+                {
+                    return Conflict();
+                }
+
+                byte[] token = new byte[16];
+                new RNGCryptoServiceProvider().GetBytes(token);
+                booking.Token = BitConverter.ToString(token).Replace("-", "");
+
+                await _context.Bookings.AddAsync(booking);
+                await _context.SaveChangesAsync();
+
+                var body = "<p>You booked {0} seats for the movie {1} at {2}. </p><p>Click the link bellow to confirm:</p> " +
+                    "<a href='{3}'>Confirm Booking</a>";
+                var message = new MailMessage();
+                message.To.Add(new MailAddress(booking.Email));
+                message.From = new MailAddress(booking.Email);
+                message.Subject = "Confirm movie booking";
+                string url = new UriBuilder()
+                {
+                    Scheme = HttpContext.Request.Scheme,
+                    Host = HttpContext.Request.Host.ToString().Trim(new char[] { '[', ']' }),
+                    Path = $"api/ConfirmEmail/{booking.Token}"
+                }.ToString();
+                message.Body = string.Format(body, booking.BookedSeats.Count, booking.TimeSlot.Movie.Title, booking.TimeSlot.Time, url);
+                message.IsBodyHtml = true;
+
+                using (var smtp = new SmtpClient())
+                {
+                    var credential = new NetworkCredential
+                    {
+                        UserName = "cinemaappburneremail@gmail.com",  // to be replaced
+                        Password = "oParola42"  // to be replaced
+                    };
+                    smtp.Credentials = credential;
+                    smtp.Host = "smtp.gmail.com";
+                    smtp.Port = 587;
+                    smtp.EnableSsl = true;
+                    await smtp.SendMailAsync(message);
+
+                    return Created(HttpContext.Request.GetDisplayUrl(), null);
+                }
             }
 
-            _context.Bookings.Remove(booking);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool BookingExists(int id)
-        {
-            return _context.Bookings.Any(e => e.ID == id);
+            return BadRequest();
         }
 
         private static BookingDTO ItemToDTO(Booking booking) => new BookingDTO(booking);
+        private Booking ModelFromVM(BookingViewModel VM)
+        {
+            var result = new Booking
+            {
+                ID = VM.ID,
+                Email = VM.Email,
+                TimeSlot = _context.TimeSlots.Include(ts => ts.Movie).FirstOrDefault(ts => ts.ID == VM.TimeSlotID)
+            };
+
+            if (result.TimeSlot == null) throw new ArgumentException();
+
+            var seatList = _context.TimeSlots.Include(ts => ts.CinemaRoom).ThenInclude(cr => cr.Seats)
+                .Where(t => t.ID == VM.TimeSlotID).SelectMany(t => t.CinemaRoom.Seats).ToList();
+            var bookedSeats = (_context.Bookings.Include(b => b.TimeSlot)
+                .Include(b => b.BookedSeats).ThenInclude(bs => bs.Seat).ToList())
+                .Where(b => b.TimeSlot.ID == VM.TimeSlotID)
+                .SelectMany(b => b.BookedSeats)
+                .ToList();
+            var list = new List<BookedSeat>();
+            VM.BookedSeatIDs.ForEach(elem =>
+            {
+                var seen = false;
+                bookedSeats.ForEach(bs =>
+                {
+                    if (bs.Seat.ID == elem)
+                        seen = true;
+                });
+                if (seen) throw new DBConcurrencyException();
+
+                var item = seatList.First(s => s.ID == elem);
+                list.Add(new BookedSeat { Seat = item, Booking = result });
+            });
+            result.BookedSeats = list;
+            return result;
+        }
     }
 }

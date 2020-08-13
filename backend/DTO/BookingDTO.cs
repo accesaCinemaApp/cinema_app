@@ -11,6 +11,8 @@ namespace CinemaApp.DTO
         public TimeSlotDTO TimeSlot { get; set; }
         public List<BookedSeatDTO> BookedSeats { get; set; }
 
+        public string Token { get; set; }
+
         public BookingDTO() { }
 
         public BookingDTO(Booking booking)
@@ -28,7 +30,8 @@ namespace CinemaApp.DTO
                 ID = ID,
                 Email = Email,
                 TimeSlot = TimeSlot.DTOToModel(),
-                BookedSeats = BookedSeats.Select(bookedSeat => bookedSeat.DTOToModel()).ToList()
+                BookedSeats = BookedSeats.Select(bookedSeat => bookedSeat.DTOToModel()).ToList(),
+                Token = Token
             };
         }
     }

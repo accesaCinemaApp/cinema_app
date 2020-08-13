@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CinemaApp.Models;
 using System.Collections.Generic;
-using Microsoft.CodeAnalysis.CSharp;
 
 namespace CinemaApp.Controllers
 {
@@ -257,7 +256,7 @@ namespace CinemaApp.Controllers
             return result;
         }
 
-        private BookingViewModel ModelToVM(Booking booking) => new BookingViewModel
+        private static BookingViewModel ModelToVM(Booking booking) => new BookingViewModel
         {
             ID = booking.ID,
             Email = booking.Email,

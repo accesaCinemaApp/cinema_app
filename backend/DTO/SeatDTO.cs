@@ -9,11 +9,7 @@ namespace CinemaApp.DTO
         public char Row { get; set; }
         public int Nr { get; set; }
 
-        // custom equality checking method
-        public bool Equals(Seat other)
-        {
-            return other != null && Row == other.Row && Nr == other.Nr;
-        }
+        public bool? Available { get; set; }
 
         public SeatDTO() { }
 
@@ -22,6 +18,7 @@ namespace CinemaApp.DTO
             ID = seat.ID;
             Row = seat.Row;
             Nr = seat.Nr;
+            Available = seat.Available;
         }
 
         public Seat DTOToModel()
@@ -30,7 +27,8 @@ namespace CinemaApp.DTO
             {
                 ID = ID,
                 Row = Row,
-                Nr = Nr
+                Nr = Nr,
+                Available = Available
             };
         }
     }

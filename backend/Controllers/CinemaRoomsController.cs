@@ -31,6 +31,7 @@ namespace CinemaApp.Controllers
 
             var cinemaRoom = await _context.CinemaRooms.Include(cinemaRoom => cinemaRoom.Seats)
                 .FirstOrDefaultAsync(cinemaRoom => cinemaRoom.ID == id);
+            
             if (cinemaRoom == null)
             {
                 return NotFound();

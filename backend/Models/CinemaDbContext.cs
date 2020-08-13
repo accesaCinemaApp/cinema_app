@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using CinemaApp.DTO;
 
 namespace CinemaApp.Models
 {

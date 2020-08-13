@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CinemaApp.Models;
 using CinemaApp.DTO;
+using System;
 
 namespace CinemaApp.API
 {
@@ -25,84 +24,73 @@ namespace CinemaApp.API
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TimeSlotDTO>>> GetTimeSlots()
         {
-            return await _context.TimeSlots.Select(timeSlot => ItemToDTO(timeSlot)).ToListAsync();
+            return await _context.TimeSlots.Include(ts => ts.Movie).Include(ts => ts.CinemaRoom).Select(timeSlot => ItemToDTO(timeSlot)).ToListAsync();
         }
 
-        // GET: api/TimeSlots/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<TimeSlotDTO>> GetTimeSlot(int id)
+        // GET: api/TimeSlots/2020-08-13
+        [HttpGet("{date}")]
+        public async Task<ActionResult<IEnumerable<TimeSlotDTO>>> GetTimeSlots(string date)
         {
-            var timeSlot = await _context.TimeSlots.FindAsync(id);
-
-            if (timeSlot == null)
-            {
-                return NotFound();
-            }
-
-            return ItemToDTO(timeSlot);
-        }
-
-        // PUT: api/TimeSlots/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutTimeSlot(int id, TimeSlotDTO timeSlot)
-        {
-            if (id != timeSlot.ID)
+            var dateComponents = date.Split('-');
+            if(dateComponents.Length != 3 || !dateComponents.All(dtc => int.TryParse(dtc, out var _i)))
             {
                 return BadRequest();
             }
+            var dateTime = new DateTime(int.Parse(dateComponents[0]),
+                                            int.Parse(dateComponents[1]),
+                                            int.Parse(dateComponents[2]));
 
-            if (!TimeSlotExists(id))
+            var timeSlots = await _context.TimeSlots
+                .Where(ts => ts.Time.Date == dateTime.Date)
+                .Include(ts => ts.Movie).Include(ts => ts.CinemaRoom)
+                .Select(ts => ItemToDTO(ts)).ToListAsync();
+
+            if (timeSlots == null || timeSlots.Count == 0)
             {
                 return NotFound();
             }
-
-            _context.Entry(timeSlot).State = EntityState.Modified;
-            if ((timeSlot.CinemaRoom.Equals(null)))
-            {
-                _context.Entry(timeSlot).Property("CinemaRoom").IsModified = false;
-            }
-            if (timeSlot.Movie.Equals(null))
-            {
-                _context.Entry(timeSlot).Property("Movie").IsModified = false;
-            }
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            return timeSlots;
         }
 
-        // POST: api/TimeSlots
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPost]
-        public async Task<ActionResult<TimeSlot>> PostTimeSlot(TimeSlotDTO timeSlot)
+        // GET: api/TimeSlots/5
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<TimeSlotDTO>> GetTimeSlot(int id)
         {
-            await _context.TimeSlots.AddAsync(timeSlot.DTOToModel());
-            await _context.SaveChangesAsync();
+            var timeSlot = await _context.TimeSlots
+                .Include(ts => ts.CinemaRoom).ThenInclude(cr => cr.Seats)
+                .Include(ts => ts.Movie)
+                .FirstOrDefaultAsync(ts => ts.ID == id);
 
-            return CreatedAtAction(nameof(GetTimeSlot), new { id = timeSlot.ID }, timeSlot);
-        }
-
-        // DELETE: api/TimeSlots/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<TimeSlotDTO>> DeleteTimeSlot(int id)
-        {
-            var timeSlot = await _context.TimeSlots.FindAsync(id);
             if (timeSlot == null)
             {
                 return NotFound();
             }
 
-            _context.TimeSlots.Remove(timeSlot);
-            await _context.SaveChangesAsync();
+            var bookedSeatList = (await _context.Bookings.Include(b => b.TimeSlot)
+                .Include(b => b.BookedSeats).ThenInclude(bs => bs.Seat).ToListAsync())
+                .Where(b => b.TimeSlot.ID == id)
+                .SelectMany(b => b.BookedSeats)
+                .ToList();
 
-            return NoContent();
-        }
+            timeSlot.CinemaRoom.Seats.ForEach(seat =>
+            {
+                var seen = false;
+                bookedSeatList.ForEach(bookedSeat =>
+                {
+                    if (!seen && seat.ID == bookedSeat.Seat.ID)
+                    {
+                        seat.Available = false;
+                        seen = true;
+                    }
+                });
 
-        private bool TimeSlotExists(int id)
-        {
-            return _context.TimeSlots.Any(e => e.ID == id);
+                if (!seen)
+                {
+                    seat.Available = true;
+                }
+            });
+
+            return ItemToDTO(timeSlot);
         }
 
         private static TimeSlotDTO ItemToDTO(TimeSlot timeSlot) => new TimeSlotDTO(timeSlot);

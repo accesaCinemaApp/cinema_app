@@ -8,5 +8,6 @@ namespace CinemaApp.Models
         public string Email { get; set; }
         public TimeSlot TimeSlot { get; set; }
         public List<BookedSeat> BookedSeats { get; set; }
+        public string Token { get; set; }
     }
 }

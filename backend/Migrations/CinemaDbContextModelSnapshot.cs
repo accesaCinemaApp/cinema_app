@@ -54,6 +54,9 @@ namespace CinemaApp.Migrations
                     b.Property<int?>("TimeSlotID")
                         .HasColumnType("int");
 
+                    b.Property<string>("Token")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("ID");
 
                     b.HasIndex("TimeSlotID");
