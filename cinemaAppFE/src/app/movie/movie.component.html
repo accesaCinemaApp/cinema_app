@@ -1,18 +1,15 @@
-<mat-card class="movie-card">
-  <mat-card-content>
-    <div class="row">
-      <div class="column1">
-    <img [src]="movie.photoURL" alt="Movie Photo">
+<div class="card mb-3 bg-dark">
+  <div class="row no-gutters">
+    <div class="col-md-4">
+      <img [src]="movie.photoURL" class="card-img" alt="{{movie.title}} cover photo">
     </div>
-    <div class="column2">
-      <mat-card-header>
-        <mat-card-title>{{movie.title}}</mat-card-title>
-      </mat-card-header>
-      <div class="button-row">
-        <button>First choice</button>
-        <button>Second choice</button>
+    <div class="col-md-8">
+      <div class="card-body">
+        <h5 class="card-title">{{movie.title}}</h5>
+        <p class="card-text">{{movie.description.length > 300 ? movie.description.substring(0, 300) + '...' : movie.description}}</p>
+        <p class="card-text"><small class="text-warning">{{movie.rating}}</small></p>
+        <a *ngFor="let item of timeSlot" [routerLink]="['/time', item[0]]" routerLinkActive="active-page" class="btn btn-outline-info m-1">{{item[1].substring(11, 16)}}</a>
       </div>
+    </div>
   </div>
-  </div>
-  </mat-card-content>
-</mat-card>
+</div>

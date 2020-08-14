@@ -3,10 +3,9 @@ import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-movie',
-  templateUrl: './movie.component.html',
-  styleUrls: ['./movie.component.css']
+  templateUrl: './movie.component.html'
 })
 export class MovieComponent {
-  @Input() movie:Movie;
-
+  @Input() movie: Movie;
+  @Input() timeSlot: string[][];
 }

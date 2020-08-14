@@ -6,8 +6,13 @@
 <div class="container-fluid my-3">
   <h4>Browsing movies on {{selectedDate}}</h4>
   <div class="row p-0">
-    <ng-container *ngFor="let timeSlot of timeSlots; index as i">
-      <app-timeslot class="col-md-6 col-sm-12 m-0" [timeSlot]="timeSlot"></app-timeslot>
+    <ng-container *ngFor="let item of movies | keyvalue">
+      <app-movie class="col-md-6 col-sm-12 m-0" [movie]="item.key" [timeSlot]="item.value"></app-movie>
     </ng-container>
+    <ng-template [ngIf]="!moviesFound">
+      <div class="alert alert-secondary max-width text-center">
+        No movies are being played on the selected date ({{selectedDate}})! 
+      </div>
+    </ng-template>
   </div>
 </div>
